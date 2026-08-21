@@ -134,8 +134,8 @@
 
       const clock = { t0: performance.now() };
       const loop = () => {
-        damped.x += (pointer.x - damped.x) * 0.16;
-        damped.y += (pointer.y - damped.y) * 0.16;
+        damped.x += (pointer.x - damped.x) * 0.045;
+        damped.y += (pointer.y - damped.y) * 0.045;
         uniforms.uMouse.value.set(damped.x, damped.y);
         const dpr = renderer.getPixelRatio();
         const goal = wantOpen ? target * dpr : 0;

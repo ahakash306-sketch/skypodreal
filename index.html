@@ -570,22 +570,7 @@ class Component extends DCLogic {
     } catch (e) {}
   }
 
-  haptic = (pattern) => {
-    try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
-    const el = this.deviceRef.current;
-    if (!el) return;
-    clearTimeout(this.hapticTimer);
-    const amt = Array.isArray(pattern) ? 1.6 : 1.1;
-    el.style.setProperty("--kick", amt);
-    el.animate(
-      [
-        { transform: el.style.transform + " translateY(0px)" },
-        { transform: el.style.transform + " translateY(" + amt + "px)" },
-        { transform: el.style.transform + " translateY(0px)" }
-      ],
-      { duration: 110, easing: "ease-out" }
-    );
-  };
+  haptic = () => {};
 
   sfx = {
     click: () => { this.haptic(8); this.playTone(1200, 0.025, { type: "square", vol: 0.04 }); },
@@ -1186,8 +1171,8 @@ class Component extends DCLogic {
 
   tickCursor = () => {
     const t = this.trail, p = this.pointer;
-    t.x += (p.x - t.x) * 0.16;
-    t.y += (p.y - t.y) * 0.16;
+    t.x += (p.x - t.x) * 0.022;
+    t.y += (p.y - t.y) * 0.022;
     if (Math.abs(p.x - t.x) < 0.5 && Math.abs(p.y - t.y) < 0.5) {
       this.cursorRaf = null;
       return;
