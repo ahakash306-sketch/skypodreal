@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  @keyframes cdSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes coffeeSwirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes coffeeShine { 0%, 100% { transform: translate(0,0) scale(1); opacity: 0.65; } 50% { transform: translate(5px,-3px) scale(1.1); opacity: 0.95; } }
+</style>
+</helmet>
+
+<div style="height:100vh; width:100vw; display:flex; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; position:relative; overflow:hidden; background-color:#efefef;">
+  <div style="position:absolute; inset:0; background-image:url('uploads/comic-background.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat; pointer-events:none;"></div>
+  <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); pointer-events:none;"></div>
+  <div style="position:absolute; bottom:6px; left:8px; font-size:12px; color:rgba(255,255,255,0.5); font-family:Helvetica, Arial, sans-serif; pointer-events:none; z-index:1;">Comic Strip Wallpaper HD Posted By Samantha Tremblay</div>
+  <div style="position:absolute; inset:0; background:linear-gradient(225deg, rgba(255,235,200,0.22) 0%, rgba(255,235,200,0.06) 25%, transparent 45%); mix-blend-mode:screen; pointer-events:none;"></div>
+  <div style="position:absolute; inset:0; background:radial-gradient(circle at 50% 45%, transparent 25%, rgba(0,0,0,0.65) 100%); pointer-events:none;"></div>
+  <div style="position:absolute; inset:0; background:linear-gradient(160deg, transparent 35%, rgba(0,0,0,0.5) 100%); pointer-events:none;"></div>
+
+  <div style="position:absolute; left:calc(50% - 20px); top:calc(50% + 250px); transform:translate(-50%,-50%); width:380px; height:90px; background:radial-gradient(ellipse, rgba(0,0,0,0.92), transparent 70%); filter:blur(6px); pointer-events:none;"></div>
+
+
+  <div ref="{{ deviceRef }}" onMouseMove="{{ handleTiltMove }}" onMouseLeave="{{ handleTiltLeave }}" style="width:320px; border-radius:36px; padding:16px; border:0.5px solid transparent; background-image:linear-gradient(345deg, #3a3a3e 0%, #262629 35%, #1a1a1c 60%, #28282b 100%), linear-gradient(135deg, #f4f4f7 0%, #c2c2c8 22%, #7c7c82 48%, #dedee2 72%, #9a9aa0 100%); background-origin:border-box; background-clip:padding-box, border-box; box-shadow:{{ deviceShadow }}, inset 0 1px 1px rgba(255,255,255,0.5), inset 0 -1px 2px rgba(0,0,0,0.45); position:relative; display:flex; flex-direction:column; align-items:center; gap:18px; box-sizing:border-box; transform:perspective(900px) rotateX({{ tiltX }}deg) rotateY({{ tiltY }}deg); transition:transform 0.15s ease-out, box-shadow 0.15s ease-out;">
+  <div style="position:absolute; inset:0; border-radius:36px; background:radial-gradient(circle at 88% 8%, rgba(255,245,220,0.14), transparent 42%); mix-blend-mode:screen; pointer-events:none; z-index:5;"></div>
+  <div style="position:absolute; inset:0; border-radius:36px; background:linear-gradient(160deg, transparent 45%, rgba(0,0,0,0.4) 100%); pointer-events:none; z-index:5;"></div>
+  <div style="position:absolute; left:6%; right:6%; bottom:-2px; height:14px; border-radius:0 0 30px 30px; background:radial-gradient(ellipse, rgba(255,190,130,0.04), transparent 75%); mix-blend-mode:screen; pointer-events:none; z-index:5;"></div>
+
+  <div style="width:100%; flex-shrink:0; display:flex; flex-direction:column;">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:0 4px 10px; position:relative;">
+      <span style="font-size:13px; letter-spacing:-0.01em; color:#c9c9cc; font-weight:700;">sky<span style="color:oklch(45% 0.12 150);">.</span></span>
+      <span style="display:flex; gap:4px; position:absolute; left:50%; transform:translateX(-50%);">
+        <sc-for list="{{ dots }}" as="d" hint-placeholder-count="7">
+          <span style="width:4px; height:4px; border-radius:50%; background:#4a4a4e;"></span>
+        </sc-for>
+      </span>
+      <span style="display:flex; align-items:center; gap:8px;">
+        <span style="width:18px; height:18px; border-radius:50%; background:radial-gradient(160deg, #1c1c1e, #050506 55%); box-shadow:0 0 0 1px #050506, 0 0 0 2px #3a3a3d, inset 0 1px 2px rgba(255,255,255,0.12), inset 0 -1px 2px rgba(0,0,0,0.6); position:relative; display:flex; align-items:center; justify-content:center;">
+          <span style="width:60%; height:60%; border-radius:50%; background:radial-gradient(circle at 38% 32%, #3a4a52, #0a0d0f 65%); box-shadow:inset 0 0 3px rgba(0,0,0,0.8);"></span>
+          <span style="position:absolute; top:22%; left:30%; width:22%; height:14%; border-radius:50%; background:rgba(255,255,255,0.35); filter:blur(0.5px); transform:rotate(-30deg);"></span>
+        </span>
+        <span style="width:9px; height:9px; border-radius:50%; background:{{ statusDotColor }}; box-shadow:{{ statusDotGlow }};"></span>
+      </span>
+    </div>
+
+    <div style="background:#0b0b0d; border-radius:20px; padding:14px; box-shadow:inset -3px 3px 7px rgba(0,0,0,0.7), inset 2px -2px 3px rgba(255,255,255,0.03); display:flex; flex-direction:column; overflow:hidden; width:100%; aspect-ratio:1/1; box-sizing:border-box;">
+
+      <sc-if value="{{ isStandby }}" hint-placeholder-val="{{ true }}">
+        <div style="height:100%;"></div>
+      </sc-if>
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">SKY OS</div>
+          <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+            <sc-for list="{{ homeItems }}" as="app" hint-placeholder-count="6">
+              <div style="display:flex; align-items:center; gap:10px; padding:8px 8px; border-radius:6px; background:{{ app.bg }}; color:{{ app.color }}; font-size:13px; cursor:pointer; margin-bottom:2px;">
+                <sc-if value="{{ app.isSvgIcon }}" hint-placeholder-val="{{ false }}">
+                  <span style="width:{{ app.maskW }}; height:{{ app.maskH }}; display:inline-block; background-color:{{ app.color }}; -webkit-mask-image:url('{{ app.maskUrl }}'); mask-image:url('{{ app.maskUrl }}'); -webkit-mask-size:contain; mask-size:contain; -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat; -webkit-mask-position:center; mask-position:center; flex-shrink:0;"></span>
+                </sc-if>
+                <sc-if value="{{ !app.isSvgIcon }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:20px; text-align:center; font-size:14px;">{{ app.icon }}</span>
+                </sc-if>
+                <span>{{ app.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAppPlaceholder }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#e6ece0;">
+          <div style="font-size:14px; font-weight:600;">{{ activeAppName }}</div>
+          <div style="font-size:10px; letter-spacing:0.06em; color:#7f8f74;">COMING SOON</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPhotosList }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">PHOTOS</div>
+          <sc-if value="{{ hasNoPhotos }}" hint-placeholder-val="{{ false }}">
+            <div style="flex:1; display:flex; align-items:center; justify-content:center; font-size:10px; color:#7f8f74;">NO PHOTOS YET</div>
+          </sc-if>
+          <div style="flex:1; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; align-content:start;">
+            <sc-for list="{{ photoItems }}" as="ph" hint-placeholder-count="0">
+<sc-if value="{{ ph.url }}" hint-placeholder-val="{{ false }}"><img src="{{ ph.url }}" style="width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:6px; cursor:pointer; box-shadow:{{ ph.shadow }};" /></sc-if>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPhotoView }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0; gap:8px;">
+          <sc-if value="{{ hasActivePhoto }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ activePhotoUrl }}" hint-placeholder-val="{{ false }}"><img src="{{ activePhotoUrl }}" style="width:100%; flex:1; object-fit:contain; border-radius:6px; min-height:0;" /></sc-if>
+            <a href="{{ activePhotoUrl }}" download="{{ activePhotoName }}" style="text-align:center; font-size:10px; letter-spacing:0.08em; color:#9fb08f; text-decoration:none; padding:6px; border-radius:4px;">⬇ DOWNLOAD</a>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isVoiceRecorder }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">VOICE RECORDER</div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:8px; padding:10px 0 12px;">
+            <div style="width:52px; height:52px; border-radius:50%; background:{{ recordDotBg }}; box-shadow:{{ recordDotShadow }}; display:flex; align-items:center; justify-content:center;">
+              <div style="width:16px; height:16px; border-radius:{{ recordIconRadius }}; background:#e6ece0;"></div>
+            </div>
+            <div style="font-size:11px; color:#9fb08f;">{{ voiceStatus }}</div>
+          </div>
+          <div ref="{{ voiceListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-for list="{{ voiceItems }}" as="v" hint-placeholder-count="0">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ v.bg }}; color:{{ v.color }}; font-size:12px; margin-bottom:2px;">
+                <span onClick="{{ v.onClick }}" style="cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ v.name }}</span>
+                <a href="{{ v.url }}" download="{{ v.filename }}" style="font-size:10px; color:#9fb08f; text-decoration:none; flex-shrink:0; padding-left:8px;">⬇</a>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEbookLibrary }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">EBOOK READER</div>
+          <div ref="{{ ebookListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-for list="{{ ebookItems }}" as="bk" hint-placeholder-count="1">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ bk.bg }}; color:{{ bk.color }}; font-size:13px; cursor:pointer; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ bk.name }}</span>
+                <span>›</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isEbookReader }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; padding-bottom:6px; border-bottom:1px solid #1c2a1e;">
+            <span style="font-size:11px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ activeEbookName }}</span>
+            <span style="font-size:9px; color:#7f8f74; flex-shrink:0; padding-left:6px;">{{ ebookPageLabel }}</span>
+          </div>
+          <div style="flex:1; overflow-y:hidden; font-size:12px; line-height:1.5; padding-top:8px; text-wrap:pretty;">{{ ebookPageText }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCallScreen }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74;">{{ callStatus }}</div>
+          <div style="font-size:15px; font-weight:600;">{{ callContactName }}</div>
+          <div style="font-size:11px; color:#9fb08f;">{{ callContactNumber }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRecentCallsList }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">RECENT CALLS</div>
+          <div ref="{{ recentCallListRef }}" style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+            <sc-for list="{{ recentCallItems }}" as="rc" hint-placeholder-count="6">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 8px; border-radius:6px; background:{{ rc.bg }}; color:{{ rc.color }}; margin-bottom:2px;">
+                <span style="font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ rc.label }}</span>
+                <button style="flex-shrink:0; width:22px; height:22px; border-radius:50%; border:none; background:oklch(58% 0.16 145); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:5px;">
+                  <img src="uploads/phone-call-icon.svg" style="width:100%; height:100%;" />
+                </button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isContactsList }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">CONTACTS</div>
+          <div ref="{{ contactListRef }}" style="flex:1; overflow-y:auto; display:flex; flex-direction:column;">
+            <sc-for list="{{ contactItems }}" as="c" hint-placeholder-count="6">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 8px; border-radius:6px; background:{{ c.bg }}; color:{{ c.color }}; margin-bottom:2px;">
+                <div style="display:flex; flex-direction:column; min-width:0; overflow:hidden;">
+                  <span style="font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ c.name }}</span>
+                  <span style="font-size:10px; opacity:0.7;">{{ c.number }}</span>
+                </div>
+                <button style="flex-shrink:0; width:22px; height:22px; border-radius:50%; border:none; background:oklch(58% 0.16 145); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:5px;"><img src="uploads/phone-call-icon.svg" style="width:100%; height:100%;" /></button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGamesMenu }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">GAMES</div>
+          <sc-for list="{{ gameItems }}" as="g" hint-placeholder-count="2">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ g.bg }}; color:{{ g.color }}; font-size:13px; cursor:pointer; margin-bottom:2px;">
+              <span>{{ g.name }}</span>
+              <span>›</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGameSnake }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <div style="display:grid; grid-template-columns:repeat(15, 1fr); grid-template-rows:repeat(15, 1fr); gap:1px; width:100%; aspect-ratio:1/1; background:#0a0a0b; background-image:linear-gradient(#161618 1px, transparent 1px), linear-gradient(90deg, #161618 1px, transparent 1px); background-size:calc(100% / 15) calc(100% / 15); border-radius:6px; padding:2px; box-sizing:border-box;">
+            <sc-for list="{{ snakeCells }}" as="cell" hint-placeholder-count="225">
+              <div style="display:flex; align-items:center; justify-content:center;">
+                <div style="width:{{ cell.size }}; height:{{ cell.size }}; border-radius:{{ cell.radius }}; background:{{ cell.color }}; box-shadow:{{ cell.shadow }};"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ snakeStatus }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGameSimon }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
+          <div style="position:relative; width:80%; aspect-ratio:1/1;">
+            <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonUpColor }};"></div>
+            <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonDownColor }};"></div>
+            <div style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonLeftColor }};"></div>
+            <div style="position:absolute; right:0; top:50%; transform:translateY(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonRightColor }};"></div>
+          </div>
+          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ simonStatus }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGameTetris }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <div style="display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(14, 1fr); gap:1px; width:78%; aspect-ratio:8/14; background:#0a0a0b; border-radius:6px; padding:2px; box-sizing:border-box;">
+            <sc-for list="{{ tetrisCells }}" as="cell" hint-placeholder-count="112">
+              <div style="background:{{ cell.color }}; border-radius:1px; box-shadow:{{ cell.shadow }};"></div>
+            </sc-for>
+          </div>
+          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ tetrisStatus }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGameMines }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <div style="display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(8, 1fr); gap:1px; width:82%; aspect-ratio:1/1; background:#0a0a0b; border-radius:6px; padding:2px; box-sizing:border-box;">
+            <sc-for list="{{ minesCells }}" as="cell" hint-placeholder-count="64">
+              <div style="display:flex; align-items:center; justify-content:center; background:{{ cell.bg }}; border-radius:1px; box-shadow:{{ cell.shadow }}; font-size:9px; font-weight:700; color:{{ cell.color }};">{{ cell.label }}</div>
+            </sc-for>
+          </div>
+          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ minesStatus }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isGameRacer }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <div style="display:grid; grid-template-columns:repeat(5, 1fr); grid-template-rows:repeat(10, 1fr); gap:1px; width:70%; aspect-ratio:5/10; background:#0a0a0b; background-image:linear-gradient(#161618 1px, transparent 1px); background-size:100% calc(100% / 10); border-radius:6px; padding:2px; box-sizing:border-box;">
+            <sc-for list="{{ racerCells }}" as="cell" hint-placeholder-count="50">
+              <div style="display:flex; align-items:center; justify-content:center;">
+                <div style="width:{{ cell.size }}; height:{{ cell.size }}; border-radius:{{ cell.radius }}; background:{{ cell.color }};"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ racerStatus }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCamera }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; position:relative; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+          <video ref="{{ cameraVideoRef }}" autoPlay="{{ true }}" playsInline="{{ true }}" muted="{{ true }}" style="display:none;"></video>
+          <canvas ref="{{ cameraCanvasRef }}" width="80" height="80" style="width:100%; height:100%; image-rendering:pixelated; filter:grayscale(1);"></canvas>
+          <div style="position:absolute; inset:0; background:repeating-linear-gradient(rgba(0,0,0,0) 0px, rgba(0,0,0,0) 1px, rgba(0,0,0,0.12) 2px); pointer-events:none;"></div>
+          <sc-if value="{{ shutterFlash }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; background:#fff;"></div>
+          </sc-if>
+          <sc-if value="{{ cameraError }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#8a8a8c; font-size:10px; text-align:center; padding:0 12px;">CAMERA UNAVAILABLE</div>
+          </sc-if>
+          <div style="position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:9px; letter-spacing:0.08em; color:#e6ece0; text-shadow:0 1px 2px rgba(0,0,0,0.8);">{{ shutterLabel }}</div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isMusicMenu }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">MUSIC</div>
+          <div ref="{{ musicMenuListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-for list="{{ musicMenuItems }}" as="mi" hint-placeholder-count="5">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ mi.bg }}; color:{{ mi.color }}; font-size:13px; cursor:pointer; margin-bottom:2px;">
+                <span>{{ mi.name }}</span>
+                <span>›</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAlbumsList }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">ALBUMS</div>
+          <div ref="{{ albumListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-for list="{{ albumItems }}" as="al" hint-placeholder-count="2">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ al.bg }}; color:{{ al.color }}; font-size:13px; cursor:pointer; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ al.name }}</span>
+                <span>›</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isArtistsList }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">ARTISTS</div>
+          <div ref="{{ artistListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-for list="{{ artistItems }}" as="ar" hint-placeholder-count="2">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ ar.bg }}; color:{{ ar.color }}; font-size:13px; cursor:pointer; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ ar.name }}</span>
+                <span>›</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlaylists }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">PLAYLISTS</div>
+          <div ref="{{ playlistListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-for list="{{ playlistItems }}" as="pl" hint-placeholder-count="1">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ pl.bg }}; color:{{ pl.color }}; font-size:13px; cursor:pointer; margin-bottom:2px;">
+                <span>{{ pl.name }}</span>
+                <span>›</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSongs }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex; flex-direction:column; height:100%; color:#e6ece0;">
+          <div style="font-size:9px; letter-spacing:0.12em; color:#7f8f74; padding-bottom:8px;">{{ listTitle }}</div>
+          <div ref="{{ songListRef }}" style="flex:1; overflow-y:hidden; display:flex; flex-direction:column;">
+            <sc-if value="{{ songsEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:20px 8px; font-size:11px; color:#7f8f74; text-align:center;">{{ songsEmptyMessage }}</div>
+            </sc-if>
+            <sc-for list="{{ songItems }}" as="song" hint-placeholder-count="2">
+              <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 10px; border-radius:6px; background:{{ song.bg }}; color:{{ song.color }}; font-size:12px; cursor:pointer; margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ song.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isPlaying }}" hint-placeholder-val="{{ false }}">
+        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:0 6px;">
+          <div style="width:78%; aspect-ratio:1/1; border-radius:50%; overflow:hidden; animation:cdSpin 3s linear infinite; animation-play-state:{{ cdSpinState }}; box-shadow:0 2px 6px rgba(0,0,0,0.6);">
+            <img src="uploads/black-vinyl-record-disk-png-transparent-background.png" style="width:100%; height:100%; object-fit:cover; display:block;" alt="vinyl record" />
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#e6ece0; text-align:center; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ playingName }}</div>
+          <div style="width:100%; height:4px; border-radius:4px; background:#2e2e30; position:relative;">
+            <div style="height:4px; border-radius:4px; background:oklch(45% 0.12 150); width:{{ progressPct }};"></div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <div style="width:100%; display:flex; flex-direction:column; align-items:center; gap:18px; min-width:0; padding-bottom:6px;">
+
+    <div style="display:flex; align-items:center; justify-content:center;">
+      <div style="position:relative; width:150px; height:150px; border-radius:50%; background:linear-gradient(335deg, #333336 0%, #242427 60%, #191919 100%); box-shadow:-8px 12px 18px rgba(0,0,0,0.5), inset 2px -2px 3px rgba(255,255,255,0.12), inset -3px 3px 7px rgba(0,0,0,0.4); flex-shrink:0;">
+        <button onClick="{{ navUp }}" style="position:absolute; top:14px; left:50%; transform:translateX(-50%); background:none; border:none; font-size:14px; color:#c7c7ca; cursor:pointer;">▲</button>
+        <button onClick="{{ navBack }}" style="position:absolute; left:14px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:14px; color:#c7c7ca; cursor:pointer;">◀</button>
+        <button onClick="{{ navSelect }}" style="position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; font-size:14px; color:#c7c7ca; cursor:pointer;">▶</button>
+        <button onClick="{{ navDown }}" style="position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:none; border:none; font-size:14px; color:#c7c7ca; cursor:pointer;">▼</button>
+        <button onClick="{{ okPress }}" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:76px; height:76px; border-radius:50%; background:radial-gradient(circle at 68% 26%, #55555a, #38383b 55%, #262628 100%); border:none; box-shadow:-5px 7px 11px rgba(0,0,0,0.5), inset 2px -2px 3px rgba(255,255,255,0.22), inset -3px 3px 7px rgba(0,0,0,0.5); cursor:pointer; font-size:12px; letter-spacing:0.06em; font-weight:700; color:#e4e4e6; display:flex; align-items:center; justify-content:center;" style-active="transform:translate(-50%,-50%) translateY(1px); box-shadow:inset 0 4px 7px rgba(0,0,0,0.6);">OK</button>
+      </div>
+    </div>
+
+  </div>
+
+  <input type="file" ref="{{ fileInputRef }}" accept="audio/*" multiple style="display:none" onChange="{{ handleFiles }}" />
+  <input type="file" ref="{{ ebookFileInputRef }}" accept=".txt,text/plain" style="display:none" onChange="{{ handleEbookFile }}" />
+  <audio ref="{{ audioRef }}" src="{{ trackUrl }}" onTimeUpdate="{{ onTimeUpdate }}" onEnded="{{ onEnded }}" style="display:none"></audio>
+  <audio ref="{{ voiceAudioRef }}" src="{{ voicePlayUrl }}" onEnded="{{ onVoicePlayEnded }}" style="display:none"></audio>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  audioRef = React.createRef();
+  volumeTrackRef = React.createRef();
+  deviceRef = React.createRef();
+  fileInputRef = React.createRef();
+  contactListRef = React.createRef();
+  recentCallListRef = React.createRef();
+  cameraVideoRef = React.createRef();
+  cameraCanvasRef = React.createRef();
+  voiceListRef = React.createRef();
+  voiceAudioRef = React.createRef();
+  ebookListRef = React.createRef();
+  ebookFileInputRef = React.createRef();
+  voiceRecorder = null;
+  voiceChunks = [];
+  voiceTimer = null;
+  musicMenuListRef = React.createRef();
+  albumListRef = React.createRef();
+  artistListRef = React.createRef();
+  playlistListRef = React.createRef();
+  songListRef = React.createRef();
+  cameraStream = null;
+  cameraRafId = null;
+
+  appDefs = [
+    { key: "camera", name: "Camera", icon: "◎" },
+    { key: "ebooks", name: "Ebook Reader", icon: "▥" },
+    { key: "games", name: "Games", icon: "▣" },
+    { key: "music", name: "Music", icon: "♪" },
+    { key: "photos", name: "Photos", icon: "▧" },
+    { key: "voice", name: "Voice Recorder", icon: "●" }
+  ];
+
+  recentCalls = [
+    { name: "Mom", number: "+91 98765 43210" },
+    { name: null, number: "+91 70000 11122" },
+    { name: "Best Friend", number: "+91 99887 66554" },
+    { name: "Crush", number: "+91 90909 08080" },
+    { name: null, number: "+91 81234 09876" },
+    { name: "Dad", number: "+91 91234 56789" },
+    { name: "My Ex", number: "+91 88776 65544" },
+    { name: "Best Friend", number: "+91 99887 66554" }
+  ];
+
+  contacts = [
+    { name: "Mom", number: "+91 98765 43210" },
+    { name: "Dad", number: "+91 91234 56789" },
+    { name: "Best Friend", number: "+91 99887 66554" },
+    { name: "Crush", number: "+91 90909 08080" },
+    { name: "My Ex", number: "+91 88776 65544" },
+    { name: "Cousin", number: "+91 97654 32109" },
+    { name: "School Friend", number: "+91 96543 21098" },
+    { name: "Neighbour", number: "+91 95432 10987" },
+    { name: "Unknown Number", number: "+91 70000 11122" },
+    { name: "Telemarketer", number: "+91 60000 22233" }
+  ];
+
+  state = {
+    screen: "standby", // standby | home | appPlaceholder | musicMenu | albumsList | artistsList | playlists | songs | playing
+    homeCursor: 0, activeAppKey: null,
+    musicMenuCursor: 0, albumsCursor: 0, artistsCursor: 0,
+    trackListMode: "playlist", trackListTracks: [], trackListTitle: "",
+    recentlyPlayed: [],
+    playlistCursor: 0, songCursor: 0,
+    playing: false, currentTime: 0, duration: 0,
+    volume: 0.75, currentIndex: 0,
+    playlists: [
+      { id: "default", name: "My Music", tracks: [] },
+      { id: "bollywood", name: "Bollywood Hits", tracks: [], remote: true, loading: true },
+      { id: "english", name: "English Hits", tracks: [], remote: true, loading: true },
+      { id: "bengali", name: "Bengali Hits", tracks: [], remote: true, loading: true }
+    ],
+    activePlaylistId: "default",
+    tiltX: 0, tiltY: 0,
+    cameraError: false, shutterFlash: false, shutterLabel: "",
+    photos: [
+      { url: "https://picsum.photos/seed/sky1/300/300", id: 1 },
+      { url: "https://picsum.photos/seed/sky2/300/300", id: 2 },
+      { url: "https://picsum.photos/seed/sky3/300/300", id: 3 },
+      { url: "https://picsum.photos/seed/sky4/300/300", id: 4 },
+      { url: "https://picsum.photos/seed/sky5/300/300", id: 5 }
+    ], photoCursor: 0,
+    gameCursor: 0, contactCursor: 0, callContact: null, recentCallCursor: 0,
+    voiceRecording: false, voiceElapsed: 0, voiceRecordings: [], voiceCursor: 0, voicePlayIndex: -1, voicePlayUrl: null, voiceError: false,
+    ebooks: [
+      { id: "book-alice", name: "Alice's Adventures in Wonderland", pages: null },
+      { id: "book-pride", name: "Pride and Prejudice", pages: null }
+    ],
+    ebookCursor: 0, activeEbookId: null, ebookPageIndex: 0,
+    keyboardOpen: false, composeText: "", shiftOn: false,
+    snakeBody: [], snakeDir: "right", snakeFood: null, snakeAlive: false, snakeStarted: false, snakeScore: 0,
+    simonSequence: [], simonPlaybackIndex: -1, simonInputIndex: 0, simonPlaying: false, simonActive: false, simonMessage: "PRESS OK TO START",
+    tetrisBoard: [], tetrisPiece: null, tetrisRot: 0, tetrisRow: 0, tetrisCol: 0, tetrisNext: null, tetrisScore: 0, tetrisAlive: false, tetrisStarted: false,
+    minesBoard: [], minesCursorRow: 0, minesCursorCol: 0, minesAlive: false, minesWon: false, minesStarted: false,
+    racerPlayerLane: 2, racerObstacles: [], racerScore: 0, racerAlive: false, racerStarted: false,
+    cassetteSpinning: false, stickyFlipped: false, penJiggle: false
+  };
+
+  toggleCassette = () => this.setState(s => ({ cassetteSpinning: !s.cassetteSpinning }));
+  toggleSticky = () => this.setState(s => ({ stickyFlipped: !s.stickyFlipped }));
+  jigglePen = () => { this.setState({ penJiggle: true }); setTimeout(() => this.setState({ penJiggle: false }), 500); };
+
+  tetrisCols = 8; tetrisRows = 14;
+  tetrominoes = [
+    { color: "oklch(70% 0.16 200)", n: 2, cells: [[0,0],[0,1],[1,0],[1,1]] },
+    { color: "oklch(70% 0.16 250)", n: 4, cells: [[1,0],[1,1],[1,2],[1,3]] },
+    { color: "oklch(70% 0.16 300)", n: 3, cells: [[0,1],[1,0],[1,1],[1,2]] },
+    { color: "oklch(70% 0.16 25)", n: 3, cells: [[0,0],[0,1],[1,1],[1,2]] },
+    { color: "oklch(70% 0.16 145)", n: 3, cells: [[0,1],[0,2],[1,0],[1,1]] },
+    { color: "oklch(70% 0.16 220)", n: 3, cells: [[0,0],[1,0],[1,1],[1,2]] },
+    { color: "oklch(70% 0.16 60)", n: 3, cells: [[0,2],[1,0],[1,1],[1,2]] }
+  ];
+  racerLanes = 5; racerVisibleRows = 10;
+
+
+
+  defaultEbookTexts = {
+    "book-alice": "Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: once or twice she had peeped into the book her sister was reading, but it had no pictures or conversations in it, \"and what is the use of a book,\" thought Alice, \"without pictures or conversations?\"\n\nSo she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.\n\nThere was nothing so very remarkable in that; nor did Alice think it so very much out of the way to hear the Rabbit say to itself, \"Oh dear! Oh dear! I shall be late!\" but when the Rabbit actually took a watch out of its waistcoat-pocket, and looked at it, and then hurried on, Alice started to her feet, for it flashed across her mind that she had never before seen a rabbit with either a waistcoat-pocket, or a watch to take out of it, and burning with curiosity, she ran across the field after it, and fortunately was just in time to see it pop down a large rabbit-hole under the hedge.\n\nIn another moment down went Alice after it, never once considering how in the world she was to get out again. The rabbit-hole went straight on like a tunnel for some way, and then dipped suddenly down, so suddenly that Alice had not a moment to think about stopping herself before she found herself falling down a very deep well.",
+    "book-pride": "It is a truth universally acknowledged, that a single man in possession of a good fortune must be in want of a wife.\n\nHowever little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.\n\n\"My dear Mr. Bennet,\" said his lady to him one day, \"have you heard that Netherfield Park is let at last?\"\n\nMr. Bennet replied that he had not.\n\n\"But it is,\" returned she; \"for Mrs. Long has just been here, and she told me all about it.\"\n\nMr. Bennet made no answer.\n\n\"Do not you want to know who has taken it?\" cried his wife impatiently.\n\n\"You want to tell me, and I have no objection to hearing it.\"\n\nThis was invitation enough.\n\n\"Why, my dear, you must know, Mrs. Long says that Netherfield is taken by a young man of large fortune from the north of England; that he came down on Monday in a chaise and four to see the place, and was so much delighted with it, that he agreed with Mr. Morris immediately; that he is to take possession before Michaelmas, and some of his servants are to be in the house by the end of next week.\""
+  };
+
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this.handleKeyDown);
+    this.stopCamera();
+    if (this.voiceTimer) clearInterval(this.voiceTimer);
+    if (this.snakeTimer) clearInterval(this.snakeTimer);
+    if (this.tetrisTimer) clearInterval(this.tetrisTimer);
+    if (this.racerTimer) clearInterval(this.racerTimer);
+  }
+
+  getAudioCtx() {
+    if (!this.audioCtx) {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      this.audioCtx = new Ctx();
+    }
+    if (this.audioCtx.state === "suspended") this.audioCtx.resume();
+    return this.audioCtx;
+  }
+
+  playTone(freq, dur, opts = {}) {
+    try {
+      const ctx = this.getAudioCtx();
+      const t0 = ctx.currentTime + (opts.delay || 0);
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = opts.type || "square";
+      osc.frequency.setValueAtTime(freq, t0);
+      if (opts.toFreq) osc.frequency.linearRampToValueAtTime(opts.toFreq, t0 + dur);
+      const vol = opts.vol ?? 0.05;
+      gain.gain.setValueAtTime(0, t0);
+      gain.gain.linearRampToValueAtTime(vol, t0 + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(t0);
+      osc.stop(t0 + dur + 0.03);
+    } catch (e) {}
+  }
+
+  playNoise(dur, opts = {}) {
+    try {
+      const ctx = this.getAudioCtx();
+      const t0 = ctx.currentTime + (opts.delay || 0);
+      const size = Math.max(1, Math.floor(ctx.sampleRate * dur));
+      const buffer = ctx.createBuffer(1, size, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < size; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / size);
+      const src = ctx.createBufferSource();
+      src.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = opts.filterType || "lowpass";
+      filter.frequency.value = opts.filterFreq || 2000;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(opts.vol ?? 0.15, t0);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      src.connect(filter).connect(gain).connect(ctx.destination);
+      src.start(t0);
+    } catch (e) {}
+  }
+
+  sfx = {
+    click: () => this.playTone(1200, 0.025, { type: "square", vol: 0.04 }),
+    select: () => { this.playTone(700, 0.05, { type: "triangle", vol: 0.06 }); this.playTone(1050, 0.06, { type: "triangle", vol: 0.05, delay: 0.05 }); },
+    back: () => this.playTone(500, 0.07, { type: "triangle", vol: 0.05, toFreq: 300 }),
+    shutter: () => { this.playNoise(0.03, { vol: 0.22, filterFreq: 3200 }); this.playNoise(0.02, { vol: 0.16, filterFreq: 1200, delay: 0.05 }); },
+    recordStart: () => this.playTone(600, 0.09, { type: "sine", vol: 0.06, toFreq: 900 }),
+    recordStop: () => this.playTone(900, 0.09, { type: "sine", vol: 0.06, toFreq: 500 }),
+    eat: () => this.playTone(1100, 0.06, { type: "square", vol: 0.05, toFreq: 1400 }),
+    death: () => this.playTone(300, 0.18, { type: "sawtooth", vol: 0.06, toFreq: 90 }),
+    line: () => [700, 900, 1100, 1400].forEach((f, i) => this.playTone(f, 0.07, { type: "triangle", vol: 0.05, delay: i * 0.05 })),
+    explode: () => this.playNoise(0.35, { vol: 0.25, filterFreq: 800 }),
+    win: () => [523, 659, 784, 1047].forEach((f, i) => this.playTone(f, 0.12, { type: "triangle", vol: 0.06, delay: i * 0.09 })),
+    gameover: () => [400, 320, 250, 180].forEach((f, i) => this.playTone(f, 0.14, { type: "sawtooth", vol: 0.05, delay: i * 0.11 })),
+    crash: () => this.playNoise(0.25, { vol: 0.2, filterFreq: 600 }),
+    simon: (dir) => this.playTone({ up: 523, down: 392, left: 330, right: 659 }[dir] || 440, 0.28, { type: "sine", vol: 0.07 })
+  };
+
+  handleKeyDown = (e) => {
+    const { screen } = this.state;
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Enter", "Escape"].includes(e.key)) this.sfx.back();
+    if (screen === "gameSnake") {
+      if (e.key === "ArrowUp") this.setSnakeDir("up");
+      else if (e.key === "ArrowDown") this.setSnakeDir("down");
+      else if (e.key === "ArrowLeft") this.setSnakeDir("left");
+      else if (e.key === "ArrowRight") this.setSnakeDir("right");
+      else if (e.key === "Enter") this.okPress();
+      else if (e.key === "Escape") this.exitGame();
+      else return;
+      e.preventDefault();
+      return;
+    }
+    if (screen === "gameTetris") {
+      if (e.key === "ArrowUp") this.rotateTetromino();
+      else if (e.key === "ArrowDown") this.moveTetromino(1, 0);
+      else if (e.key === "ArrowLeft") this.moveTetromino(0, -1);
+      else if (e.key === "ArrowRight") this.moveTetromino(0, 1);
+      else if (e.key === "Enter") this.okPress();
+      else if (e.key === "Escape") this.exitGame();
+      else return;
+      e.preventDefault();
+      return;
+    }
+    if (screen === "gameMines") {
+      if (e.key === "ArrowUp") this.moveMinesCursor(-1, 0);
+      else if (e.key === "ArrowDown") this.moveMinesCursor(1, 0);
+      else if (e.key === "ArrowLeft") this.moveMinesCursor(0, -1);
+      else if (e.key === "ArrowRight") this.moveMinesCursor(0, 1);
+      else if (e.key === "Enter") this.okPress();
+      else if (e.key === "Escape") this.exitGame();
+      else return;
+      e.preventDefault();
+      return;
+    }
+    if (screen === "gameRacer") {
+      if (e.key === "ArrowLeft") this.moveRacer(-1);
+      else if (e.key === "ArrowRight") this.moveRacer(1);
+      else if (e.key === "Enter") this.okPress();
+      else if (e.key === "Escape") this.exitGame();
+      else return;
+      e.preventDefault();
+      return;
+    }
+    if (screen === "gameSimon") {
+      if (e.key === "ArrowUp") this.simonInput("up");
+      else if (e.key === "ArrowDown") this.simonInput("down");
+      else if (e.key === "ArrowLeft") this.simonInput("left");
+      else if (e.key === "ArrowRight") this.simonInput("right");
+      else if (e.key === "Enter") this.okPress();
+      else if (e.key === "Escape") this.exitGame();
+      else return;
+      e.preventDefault();
+      return;
+    }
+    if (e.key === "ArrowUp") this.navUp();
+    else if (e.key === "ArrowDown") this.navDown();
+    else if (e.key === "ArrowLeft") this.navBack();
+    else if (e.key === "ArrowRight" || e.key === "Enter") this.navSelect();
+    else return;
+    e.preventDefault();
+  };
+
+  snakeSpeed = 480;
+
+  scrollListIntoView = (ref, cursor) => {
+    const list = ref.current;
+    if (!list) return;
+    const el = list.children[cursor];
+    if (el) el.scrollIntoView({ block: "nearest" });
+  };
+
+  closeKeyboard = () => this.setState({ keyboardOpen: false });
+
+  typeChar = (c) => {
+    const ch = this.state.shiftOn ? c.toUpperCase() : c;
+    this.setState(s => ({ composeText: s.composeText + ch, shiftOn: false }));
+  };
+
+  toggleShift = () => this.setState(s => ({ shiftOn: !s.shiftOn }));
+  backspace = () => this.setState(s => ({ composeText: s.composeText.slice(0, -1) }));
+  typeSpace = () => this.setState(s => ({ composeText: s.composeText + " " }));
+  submitCompose = () => { window.alert("Message sent (demo)"); this.setState({ keyboardOpen: false, composeText: "" }); };
+
+  buildKeyboardRows() {
+    const numRow = [["1","!"],["2","@"],["3","#"],["4","$"],["5","%"],["6","^"],["7","&"],["8","*"],["9","("],["0",")"],["-","_"],["+","="]]
+      .map(([top, bottom]) => ({ top, label: bottom, flex: 1, color: "#e6ece0", fontSize: "11px", onClick: () => this.typeChar(top) }));
+    const qRow = "QWERTYUIOP".split("").map(l => ({ label: l, flex: 1, color: "#e6ece0", fontSize: "12px", onClick: () => this.typeChar(l.toLowerCase()) }))
+      .concat([{ label: "⌫", flex: 1, color: "#c7c7ca", fontSize: "12px", onClick: this.backspace }]);
+    const aRow = "ASDFGHJKL".split("").map(l => ({ label: l, flex: 1, color: "#e6ece0", fontSize: "12px", onClick: () => this.typeChar(l.toLowerCase()) }))
+      .concat([
+        { top: ";", label: ":", flex: 1, color: "#e6ece0", fontSize: "10px", onClick: () => this.typeChar(";") },
+        { top: "'", label: "\"", flex: 1, color: "#e6ece0", fontSize: "10px", onClick: () => this.typeChar("'") }
+      ]);
+    const zRow = [{ label: "⇧", flex: 1, color: this.state.shiftOn ? "#8fbf6e" : "#c7c7ca", fontSize: "13px", onClick: this.toggleShift }]
+      .concat("ZXCVBNM".split("").map(l => ({ label: l, flex: 1, color: "#e6ece0", fontSize: "12px", onClick: () => this.typeChar(l.toLowerCase()) })))
+      .concat([
+        { top: ",", label: "<", flex: 1, color: "#e6ece0", fontSize: "10px", onClick: () => this.typeChar(",") },
+        { top: ".", label: ">", flex: 1, color: "#e6ece0", fontSize: "10px", onClick: () => this.typeChar(".") },
+        { top: "/", label: "?", flex: 1, color: "#e6ece0", fontSize: "10px", onClick: () => this.typeChar("/") }
+      ]);
+    const bottomRow = [
+      { label: "Sym", flex: 1.4, color: "#8fbf6e", fontSize: "10px", onClick: () => {} },
+      { label: "🌐", flex: 1, color: "#e6ece0", fontSize: "12px", onClick: () => {} },
+      { label: "Space", flex: 4, color: "#e6ece0", fontSize: "11px", onClick: this.typeSpace },
+      { label: ".", flex: 1, color: "#e6ece0", fontSize: "12px", onClick: () => this.typeChar(".") },
+      { label: "@", flex: 1, color: "#e6ece0", fontSize: "12px", onClick: () => this.typeChar("@") },
+      { label: "Enter", flex: 1.6, color: "#8fbf6e", fontSize: "10px", onClick: this.submitCompose }
+    ];
+    return [numRow, qRow, aRow, zRow, bottomRow];
+  }
+
+  callContact = (contact, from) => {
+    this.setState({ screen: "callScreen", callContact: contact, calledFrom: from || "contactsList" });
+    setTimeout(() => { if (this.state.screen === "callScreen") this.setState({ screen: this.state.calledFrom }); }, 2500);
+  };
+
+  scrollContactIntoView = () => {
+    const list = this.contactListRef.current;
+    if (!list) return;
+    const el = list.children[this.state.contactCursor];
+    if (el) el.scrollIntoView({ block: "nearest" });
+  };
+
+  scrollRecentCallIntoView = () => {
+    const list = this.recentCallListRef.current;
+    if (!list) return;
+    const el = list.children[this.state.recentCallCursor];
+    if (el) el.scrollIntoView({ block: "nearest" });
+  };
+
+  randCell() { return { x: Math.floor(Math.random() * 15), y: Math.floor(Math.random() * 15) }; }
+
+  startSnake = () => {
+    if (this.snakeTimer) clearInterval(this.snakeTimer);
+    this.snakeSpeed = 480;
+    this.setState({
+      snakeBody: [{ x: 7, y: 7 }, { x: 6, y: 7 }, { x: 5, y: 7 }],
+      snakeDir: "right", snakeFood: this.randCell(), snakeAlive: true, snakeStarted: true, snakeScore: 0
+    });
+    this.snakeTimer = setInterval(this.stepSnake, this.snakeSpeed);
+  };
+
+  restartSnakeTimer = () => {
+    if (this.snakeTimer) clearInterval(this.snakeTimer);
+    this.snakeTimer = setInterval(this.stepSnake, this.snakeSpeed);
+  };
+
+  setSnakeDir = (dir) => {
+    this.sfx.back();
+    const opp = { up: "down", down: "up", left: "right", right: "left" };
+    if (opp[dir] === this.state.snakeDir) return;
+    this.setState({ snakeDir: dir });
+  };
+
+  stepSnake = () => {
+    if (!this.state.snakeAlive) return;
+    const { snakeBody, snakeDir, snakeFood } = this.state;
+    const head = snakeBody[0];
+    const delta = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }[snakeDir];
+    const next = { x: head.x + delta.x, y: head.y + delta.y };
+    const hitWall = next.x < 0 || next.x > 14 || next.y < 0 || next.y > 14;
+    const hitSelf = snakeBody.some(s => s.x === next.x && s.y === next.y);
+    if (hitWall || hitSelf) {
+      this.sfx.death();
+      clearInterval(this.snakeTimer);
+      this.setState({ snakeAlive: false });
+      return;
+    }
+    const ate = snakeFood && next.x === snakeFood.x && next.y === snakeFood.y;
+    const newBody = [next, ...snakeBody];
+    if (!ate) newBody.pop();
+    this.setState(s => ({
+      snakeBody: newBody,
+      snakeFood: ate ? this.randCell() : s.snakeFood,
+      snakeScore: ate ? s.snakeScore + 1 : s.snakeScore
+    }));
+    if (ate) this.sfx.eat();
+    if (ate && this.snakeSpeed > 180) {
+      this.snakeSpeed -= 18;
+      this.restartSnakeTimer();
+    }
+  };
+
+  rotateCells(cells, n) { return cells.map(([r, c]) => [c, n - 1 - r]); }
+
+  getPieceCells(piece, rot) {
+    let cells = piece.cells;
+    for (let i = 0; i < rot; i++) cells = this.rotateCells(cells, piece.n);
+    return cells;
+  }
+
+  tetrisCollides(board, cells, row, col) {
+    for (const [r, c] of cells) {
+      const nr = row + r, nc = col + c;
+      if (nc < 0 || nc >= this.tetrisCols || nr >= this.tetrisRows) return true;
+      if (nr >= 0 && board[nr][nc]) return true;
+    }
+    return false;
+  }
+
+  spawnTetromino(board) {
+    const piece = this.tetrominoes[Math.floor(Math.random() * this.tetrominoes.length)];
+    const col = Math.floor((this.tetrisCols - piece.n) / 2);
+    return { piece, rot: 0, row: 0, col };
+  }
+
+  startTetris = () => {
+    if (this.tetrisTimer) clearInterval(this.tetrisTimer);
+    const board = Array.from({ length: this.tetrisRows }, () => Array(this.tetrisCols).fill(null));
+    const spawn = this.spawnTetromino(board);
+    this.setState({
+      tetrisBoard: board, tetrisPiece: spawn.piece, tetrisRot: 0, tetrisRow: spawn.row, tetrisCol: spawn.col,
+      tetrisScore: 0, tetrisAlive: true, tetrisStarted: true
+    });
+    this.tetrisSpeed = 550;
+    this.tetrisTimer = setInterval(this.tickTetris, this.tetrisSpeed);
+  };
+
+  moveTetromino = (dr, dc) => {
+    this.sfx.back();
+    const { tetrisBoard, tetrisPiece, tetrisRot, tetrisRow, tetrisCol, tetrisAlive } = this.state;
+    if (!tetrisAlive || !tetrisPiece) return;
+    const cells = this.getPieceCells(tetrisPiece, tetrisRot);
+    const nr = tetrisRow + dr, nc = tetrisCol + dc;
+    if (!this.tetrisCollides(tetrisBoard, cells, nr, nc)) this.setState({ tetrisRow: nr, tetrisCol: nc });
+  };
+
+  rotateTetromino = () => {
+    this.sfx.back();
+    const { tetrisBoard, tetrisPiece, tetrisRot, tetrisRow, tetrisCol, tetrisAlive } = this.state;
+    if (!tetrisAlive || !tetrisPiece) return;
+    const newRot = (tetrisRot + 1) % 4;
+    const cells = this.getPieceCells(tetrisPiece, newRot);
+    if (!this.tetrisCollides(tetrisBoard, cells, tetrisRow, tetrisCol)) this.setState({ tetrisRot: newRot });
+  };
+
+  lockTetromino = () => {
+    const { tetrisBoard, tetrisPiece, tetrisRot, tetrisRow, tetrisCol } = this.state;
+    const board = tetrisBoard.map(row => row.slice());
+    const cells = this.getPieceCells(tetrisPiece, tetrisRot);
+    cells.forEach(([r, c]) => { const nr = tetrisRow + r, nc = tetrisCol + c; if (nr >= 0 && nr < this.tetrisRows) board[nr][nc] = tetrisPiece.color; });
+    let cleared = 0;
+    for (let r = this.tetrisRows - 1; r >= 0; r--) {
+      if (board[r].every(cell => cell)) { board.splice(r, 1); board.unshift(Array(this.tetrisCols).fill(null)); cleared++; r++; }
+    }
+    const spawn = this.spawnTetromino(board);
+    const gameOver = this.tetrisCollides(board, this.getPieceCells(spawn.piece, 0), spawn.row, spawn.col);
+    if (cleared > 0) this.sfx.line();
+    if (gameOver) { if (this.tetrisTimer) clearInterval(this.tetrisTimer); this.sfx.gameover(); }
+    this.setState(s => ({
+      tetrisBoard: board, tetrisScore: s.tetrisScore + cleared * 100,
+      tetrisPiece: gameOver ? null : spawn.piece, tetrisRot: 0, tetrisRow: spawn.row, tetrisCol: spawn.col,
+      tetrisAlive: !gameOver
+    }));
+  };
+
+  tickTetris = () => {
+    const { tetrisBoard, tetrisPiece, tetrisRot, tetrisRow, tetrisCol, tetrisAlive } = this.state;
+    if (!tetrisAlive) return;
+    const cells = this.getPieceCells(tetrisPiece, tetrisRot);
+    if (!this.tetrisCollides(tetrisBoard, cells, tetrisRow + 1, tetrisCol)) this.setState({ tetrisRow: tetrisRow + 1 });
+    else this.lockTetromino();
+  };
+
+  hardDropTetris = () => {
+    const { tetrisBoard, tetrisPiece, tetrisRot, tetrisCol, tetrisAlive } = this.state;
+    if (!tetrisAlive) return;
+    let row = this.state.tetrisRow;
+    const cells = this.getPieceCells(tetrisPiece, tetrisRot);
+    while (!this.tetrisCollides(tetrisBoard, cells, row + 1, tetrisCol)) row++;
+    this.setState({ tetrisRow: row }, this.lockTetromino);
+  };
+
+  generateMinesBoard() {
+    const rows = 8, cols = 8, mines = 10;
+    const board = Array.from({ length: rows }, () => Array.from({ length: cols }, () => ({ mine: false, revealed: false, count: 0 })));
+    let placed = 0;
+    while (placed < mines) {
+      const r = Math.floor(Math.random() * rows), c = Math.floor(Math.random() * cols);
+      if (!board[r][c].mine) { board[r][c].mine = true; placed++; }
+    }
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      if (board[r][c].mine) continue;
+      let count = 0;
+      for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].mine) count++;
+      }
+      board[r][c].count = count;
+    }
+    return board;
+  }
+
+  startMines = () => {
+    this.setState({
+      minesBoard: this.generateMinesBoard(), minesCursorRow: 0, minesCursorCol: 0,
+      minesAlive: true, minesWon: false, minesStarted: true
+    });
+  };
+
+  floodRevealMines(board, r, c) {
+    const rows = board.length, cols = board[0].length;
+    const stack = [[r, c]];
+    while (stack.length) {
+      const [cr, cc] = stack.pop();
+      if (cr < 0 || cr >= rows || cc < 0 || cc >= cols) continue;
+      const cell = board[cr][cc];
+      if (cell.revealed || cell.mine) continue;
+      cell.revealed = true;
+      if (cell.count === 0) {
+        for (let dr = -1; dr <= 1; dr++) for (let dc = -1; dc <= 1; dc++) if (dr || dc) stack.push([cr + dr, cc + dc]);
+      }
+    }
+  }
+
+  revealMinesCell = (r, c) => {
+    const { minesBoard, minesAlive } = this.state;
+    if (!minesAlive) return;
+    const board = minesBoard.map(row => row.map(cell => ({ ...cell })));
+    const cell = board[r][c];
+    if (cell.revealed) return;
+    if (cell.mine) {
+      this.sfx.explode();
+      board.forEach(row => row.forEach(c2 => { if (c2.mine) c2.revealed = true; }));
+      this.setState({ minesBoard: board, minesAlive: false });
+      return;
+    }
+    this.floodRevealMines(board, r, c);
+    const won = board.every(row => row.every(c2 => c2.mine || c2.revealed));
+    if (won) this.sfx.win();
+    this.setState({ minesBoard: board, minesAlive: !won, minesWon: won });
+  };
+
+  moveMinesCursor = (dr, dc) => {
+    this.sfx.back();
+    this.setState(s => ({
+      minesCursorRow: Math.min(7, Math.max(0, s.minesCursorRow + dr)),
+      minesCursorCol: Math.min(7, Math.max(0, s.minesCursorCol + dc))
+    }));
+  };
+
+  startRacer = () => {
+    if (this.racerTimer) clearInterval(this.racerTimer);
+    this.setState({ racerPlayerLane: 2, racerObstacles: [], racerScore: 0, racerAlive: true, racerStarted: true });
+    this.racerSpeed = 260;
+    this.racerTimer = setInterval(this.tickRacer, this.racerSpeed);
+  };
+
+  tickRacer = () => {
+    if (!this.state.racerAlive) return;
+    this.setState(s => {
+      let obstacles = s.racerObstacles.map(o => ({ ...o, row: o.row + 1 })).filter(o => o.row < this.racerVisibleRows);
+      const laneHasSpawn = obstacles.some(o => o.row === 0);
+      if (!laneHasSpawn && Math.random() < 0.5) obstacles = [...obstacles, { lane: Math.floor(Math.random() * this.racerLanes), row: 0 }];
+      const crashed = obstacles.some(o => o.row === this.racerVisibleRows - 1 && o.lane === s.racerPlayerLane);
+      if (crashed) { if (this.racerTimer) clearInterval(this.racerTimer); this.sfx.crash(); }
+      return { racerObstacles: obstacles, racerScore: s.racerScore + 1, racerAlive: !crashed };
+    });
+  };
+
+  moveRacer = (d) => {
+    this.sfx.back();
+    if (!this.state.racerAlive) return;
+    this.setState(s => ({ racerPlayerLane: Math.min(this.racerLanes - 1, Math.max(0, s.racerPlayerLane + d)) }));
+  };
+
+  simonPlaySequence = (seq) => {
+    this.setState({ simonPlaying: true, simonInputIndex: 0, simonMessage: "WATCH…" });
+    seq.forEach((dir, i) => {
+      setTimeout(() => { this.setState({ simonPlaybackIndex: i }); this.sfx.simon(dir); }, i * 650);
+      setTimeout(() => this.setState({ simonPlaybackIndex: -1 }), i * 650 + 400);
+    });
+    setTimeout(() => this.setState({ simonPlaying: false, simonMessage: "YOUR TURN" }), seq.length * 650);
+  };
+
+  startSimon = () => {
+    const seq = [["up","down","left","right"][Math.floor(Math.random() * 4)]];
+    this.setState({ simonSequence: seq, simonActive: true, simonInputIndex: 0 });
+    this.simonPlaySequence(seq);
+  };
+
+  simonInput = (dir) => {
+    const { simonActive, simonPlaying, simonSequence, simonInputIndex } = this.state;
+    if (!simonActive || simonPlaying) return;
+    this.sfx.simon(dir);
+    if (dir === simonSequence[simonInputIndex]) {
+      if (simonInputIndex + 1 === simonSequence.length) {
+        const nextSeq = [...simonSequence, ["up","down","left","right"][Math.floor(Math.random() * 4)]];
+        this.setState({ simonSequence: nextSeq, simonMessage: "GOOD!" });
+        setTimeout(() => this.simonPlaySequence(nextSeq), 500);
+      } else {
+        this.setState({ simonInputIndex: simonInputIndex + 1 });
+      }
+    } else {
+      this.sfx.gameover();
+      this.setState({ simonActive: false, simonMessage: "GAME OVER — PRESS OK", simonSequence: [] });
+    }
+  };
+
+  startVoiceRecording = () => {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      this.voiceChunks = [];
+      const rec = new MediaRecorder(stream);
+      this.voiceRecorder = rec;
+      rec.ondataavailable = (e) => { if (e.data.size > 0) this.voiceChunks.push(e.data); };
+      rec.onstop = () => {
+        stream.getTracks().forEach(t => t.stop());
+        const blob = new Blob(this.voiceChunks, { type: "audio/webm" });
+        const url = URL.createObjectURL(blob);
+        const n = this.state.voiceRecordings.length + 1;
+        this.setState(s => ({
+          voiceRecordings: [...s.voiceRecordings, { name: "Recording " + n, url, duration: s.voiceElapsed }],
+          voiceRecording: false, voiceElapsed: 0
+        }));
+      };
+      this.sfx.recordStart();
+      rec.start();
+      this.setState({ voiceRecording: true, voiceElapsed: 0, voiceError: false });
+      this.voiceTimer = setInterval(() => this.setState(s => ({ voiceElapsed: s.voiceElapsed + 1 })), 1000);
+    }).catch(() => this.setState({ voiceError: true }));
+  };
+
+  stopVoiceRecording = () => {
+    if (this.state.voiceRecording) this.sfx.recordStop();
+    if (this.voiceTimer) clearInterval(this.voiceTimer);
+    if (this.voiceRecorder && this.voiceRecorder.state !== "inactive") this.voiceRecorder.stop();
+  };
+
+  toggleVoiceRecording = () => {
+    if (this.state.voiceRecording) this.stopVoiceRecording();
+    else this.startVoiceRecording();
+  };
+
+  playVoiceRecording = (i) => {
+    const r = this.state.voiceRecordings[i];
+    if (!r) return;
+    if (this.state.voicePlayIndex === i) {
+      const audio = this.voiceAudioRef.current;
+      if (audio) audio.pause();
+      this.setState({ voicePlayIndex: -1 });
+      return;
+    }
+    this.setState({ voicePlayIndex: i, voicePlayUrl: r.url }, () => {
+      const audio = this.voiceAudioRef.current;
+      if (audio) { audio.currentTime = 0; audio.play(); }
+    });
+  };
+
+  onVoicePlayEnded = () => this.setState({ voicePlayIndex: -1 });
+
+  formatVoiceTime(sec) {
+    const m = Math.floor(sec / 60), s = sec % 60;
+    return m + ":" + String(s).padStart(2, "0");
+  }
+
+  paginateText(text) {
+    const pageSize = 600;
+    const clean = String(text).replace(/\r\n/g, "\n").trim();
+    const pages = [];
+    let i = 0;
+    while (i < clean.length) {
+      let end = Math.min(i + pageSize, clean.length);
+      if (end < clean.length) {
+        const lastSpace = clean.lastIndexOf(" ", end);
+        if (lastSpace > i) end = lastSpace;
+      }
+      pages.push(clean.slice(i, end).trim());
+      i = end;
+    }
+    return pages.length ? pages : ["(empty book)"];
+  }
+
+  getActiveEbook() {
+    return this.state.ebooks.find(b => b.id === this.state.activeEbookId);
+  }
+
+  handleEbookFile = (e) => {
+    const file = e.target.files[0];
+    if (!file) { return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const pages = this.paginateText(reader.result);
+      const id = "book-" + Date.now();
+      this.setState(s => ({ ebooks: [...s.ebooks, { id, name: file.name.replace(/\.[^.]+$/, ""), pages }] }));
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
+  startCamera = () => {
+    if (this.cameraStream) { this.drawCameraLoop(); return; }
+    navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false })
+      .then(stream => {
+        this.cameraStream = stream;
+        const video = this.cameraVideoRef.current;
+        if (video) { video.srcObject = stream; video.play(); }
+        this.drawCameraLoop();
+      })
+      .catch(() => this.setState({ cameraError: true }));
+  };
+
+  stopCamera = () => {
+    if (this.cameraRafId) cancelAnimationFrame(this.cameraRafId);
+    this.cameraRafId = null;
+    if (this.cameraStream) {
+      this.cameraStream.getTracks().forEach(t => t.stop());
+      this.cameraStream = null;
+    }
+  };
+
+  drawCameraLoop = () => {
+    const video = this.cameraVideoRef.current;
+    const canvas = this.cameraCanvasRef.current;
+    if (video && canvas && video.readyState >= 2 && video.videoWidth) {
+      const ctx = canvas.getContext("2d");
+      const vw = video.videoWidth, vh = video.videoHeight;
+      const side = Math.min(vw, vh);
+      const sx = (vw - side) / 2, sy = (vh - side) / 2;
+      ctx.drawImage(video, sx, sy, side, side, 0, 0, canvas.width, canvas.height);
+    }
+    this.cameraRafId = requestAnimationFrame(this.drawCameraLoop);
+  };
+
+  triggerShutter = () => {
+    if (this.state.shutterLabel) return;
+    this.setState({ shutterLabel: "FOCUSING…" });
+    setTimeout(() => {
+      this.sfx.shutter();
+      this.setState({ shutterFlash: true, shutterLabel: "" });
+      const video = this.cameraVideoRef.current;
+      if (video && video.videoWidth) {
+        const side = Math.min(video.videoWidth, video.videoHeight);
+        const sx = (video.videoWidth - side) / 2, sy = (video.videoHeight - side) / 2;
+        const size = 1080;
+        const hi = document.createElement("canvas");
+        hi.width = size; hi.height = size;
+        const ctx = hi.getContext("2d");
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+        ctx.filter = "grayscale(1)";
+        ctx.drawImage(video, sx, sy, side, side, 0, 0, size, size);
+        ctx.filter = "none";
+        const pad = size * 0.035;
+        ctx.textAlign = "right";
+        ctx.textBaseline = "bottom";
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "600 " + (size * 0.032) + "px Helvetica, Arial, sans-serif";
+        ctx.fillText("skypod", size - pad, size - pad);
+        ctx.font = "400 " + (size * 0.024) + "px Helvetica, Arial, sans-serif";
+        ctx.fillText("clicked on", size - pad, size - pad - size * 0.04);
+        const dataUrl = hi.toDataURL("image/png");
+        this.setState(s => ({ photos: [{ url: dataUrl, id: Date.now() }, ...s.photos] }));
+      }
+      setTimeout(() => this.setState({ shutterFlash: false }), 120);
+    }, 550);
+  };
+
+  handleTiltMove = (e) => {
+    const el = this.deviceRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    this.setState({ tiltX: py * -1.5, tiltY: px * 1.5 });
+  };
+
+  handleTiltLeave = () => this.setState({ tiltX: 0, tiltY: 0 });
+
+  componentDidMount() {
+    window.addEventListener("keydown", this.handleKeyDown);
+    this.setState(s => ({
+      ebooks: s.ebooks.map(b => b.pages ? b : { ...b, pages: this.paginateText(this.defaultEbookTexts[b.id] || "") })
+    }));
+    const fetchPlaylist = (id, term, country, limit) => {
+      fetch("https://itunes.apple.com/search?term=" + encodeURIComponent(term) + "&media=music&country=" + country + "&limit=" + limit)
+        .then(r => r.json())
+        .then(data => {
+          const tracks = (data.results || []).filter(r => r.previewUrl).map(r => ({
+            name: r.trackName, url: r.previewUrl, artist: r.artistName, album: r.collectionName || term
+          }));
+          this.setState(s => ({
+            playlists: s.playlists.map(p => p.id === id ? { ...p, tracks, loading: false } : p)
+          }));
+        })
+        .catch(() => this.setState(s => ({
+          playlists: s.playlists.map(p => p.id === id ? { ...p, loading: false } : p)
+        })));
+    };
+    fetchPlaylist("bollywood", "bollywood", "IN", 17);
+    fetchPlaylist("english", "Ed Sheeran Dua Lipa Taylor Swift", "US", 17);
+    fetchPlaylist("bengali", "Rupam Islam Fossils", "IN", 16);
+  }
+
+  getActivePlaylist() {
+    return this.state.playlists.find(p => p.id === this.state.activePlaylistId) || this.state.playlists[0];
+  }
+
+  getAllTracks() {
+    return this.state.playlists.flatMap(p => p.tracks.map(t => ({ ...t, album: t.album || p.name })));
+  }
+
+  getAlbums() {
+    const map = new Map();
+    this.getAllTracks().forEach(t => {
+      const key = t.album || "Unknown Album";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(t);
+    });
+    return Array.from(map.entries()).map(([name, tracks]) => ({ name, tracks }));
+  }
+
+  getArtists() {
+    const map = new Map();
+    this.getAllTracks().forEach(t => {
+      const key = t.artist || "Unknown Artist";
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(t);
+    });
+    return Array.from(map.entries()).map(([name, tracks]) => ({ name, tracks }));
+  }
+
+  getCurrentTrackList() {
+    if (this.state.trackListMode === "playlist") return this.getActivePlaylist().tracks;
+    return this.state.trackListTracks;
+  }
+
+  getSongsNavCount() {
+    if (this.state.trackListMode === "playlist") {
+      const p = this.getActivePlaylist();
+      return p.tracks.length + (p.remote ? 0 : 1);
+    }
+    return Math.max(this.getCurrentTrackList().length, 1);
+  }
+
+  selectMusicMenuItem = (i) => {
+    if (i === 0) this.setState({ screen: "albumsList", albumsCursor: 0 });
+    else if (i === 1) this.setState({ screen: "artistsList", artistsCursor: 0 });
+    else if (i === 2) this.setState({ screen: "songs", songCursor: 0, trackListMode: "all", trackListTracks: this.getAllTracks(), trackListTitle: "SONGS" });
+    else if (i === 3) this.setState({ screen: "playlists", playlistCursor: 0 });
+    else if (i === 4) this.setState({ screen: "songs", songCursor: 0, trackListMode: "recent", trackListTracks: this.state.recentlyPlayed, trackListTitle: "RECENTLY PLAYED" });
+  };
+
+  openAlbum = (i) => {
+    const a = this.getAlbums()[i];
+    if (!a) return;
+    this.setState({ screen: "songs", songCursor: 0, trackListMode: "album", trackListTracks: a.tracks, trackListTitle: a.name.toUpperCase() });
+  };
+
+  openArtist = (i) => {
+    const a = this.getArtists()[i];
+    if (!a) return;
+    this.setState({ screen: "songs", songCursor: 0, trackListMode: "artist", trackListTracks: a.tracks, trackListTitle: a.name.toUpperCase() });
+  };
+
+  handleFiles = (e) => {
+    const files = Array.from(e.target.files).map(f => ({
+      name: f.name.replace(/\.[^.]+$/, ""), url: URL.createObjectURL(f), artist: "Unknown Artist"
+    }));
+    if (files.length === 0) return;
+    this.setState(s => ({
+      playlists: s.playlists.map(p => p.id === s.activePlaylistId ? { ...p, tracks: [...p.tracks, ...files.map(f => ({ ...f, album: p.name }))] } : p)
+    }));
+  };
+
+  createPlaylist = () => {
+    const name = window.prompt("Playlist name?");
+    if (!name) return;
+    const id = "pl-" + Date.now();
+    this.setState(s => ({ playlists: [...s.playlists, { id, name, tracks: [] }] }));
+  };
+
+  playPause = () => {
+    const audio = this.audioRef.current;
+    if (!audio) return;
+    if (this.state.playing) { audio.pause(); this.setState({ playing: false }); }
+    else { audio.play(); this.setState({ playing: true }); }
+  };
+
+  onTimeUpdate = () => {
+    const audio = this.audioRef.current;
+    if (!audio) return;
+    this.setState({ currentTime: audio.currentTime, duration: audio.duration || 0 });
+  };
+
+  onEnded = () => {
+    const list = this.getCurrentTrackList();
+    if (list.length === 0) return;
+    const idx = (this.state.currentIndex + 1) % list.length;
+    this.selectTrack(idx);
+  };
+
+  applyVolumeFromClientX = (clientX) => {
+    const track = this.volumeTrackRef.current;
+    if (!track) return;
+    const rect = track.getBoundingClientRect();
+    const pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+    this.setState({ volume: pct });
+    const audio = this.audioRef.current;
+    if (audio) audio.volume = pct;
+  };
+
+  startVolumeDrag = (e) => {
+    e.preventDefault();
+    this.applyVolumeFromClientX(e.clientX);
+    const onMove = (ev) => this.applyVolumeFromClientX(ev.clientX);
+    const onUp = () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
+
+  volumeUp = () => {
+    const v = Math.min(1, this.state.volume + 0.1);
+    this.setState({ volume: v });
+    const audio = this.audioRef.current;
+    if (audio) audio.volume = v;
+  };
+
+  volumeDown = () => {
+    const v = Math.max(0, this.state.volume - 0.1);
+    this.setState({ volume: v });
+    const audio = this.audioRef.current;
+    if (audio) audio.volume = v;
+  };
+
+  navUp = () => {
+    this.sfx.back();
+    const { screen, playlists } = this.state;
+    if (screen === "home") {
+      const n = this.appDefs.length;
+      this.setState(s => ({ homeCursor: (s.homeCursor - 1 + n) % n }));
+    } else if (screen === "games") {
+      this.setState(s => ({ gameCursor: (s.gameCursor - 1 + 5) % 5 }));
+    } else if (screen === "contactsList" && this.state.screen !== "callScreen") {
+      const n = this.contacts.length;
+      this.setState(s => ({ contactCursor: (s.contactCursor - 1 + n) % n }), this.scrollContactIntoView);
+    } else if (screen === "recentCallsList") {
+      const n = this.recentCalls.length;
+      this.setState(s => ({ recentCallCursor: (s.recentCallCursor - 1 + n) % n }), this.scrollRecentCallIntoView);
+    } else if (screen === "photosList" && this.state.photos.length > 0) {
+      const n = this.state.photos.length;
+      this.setState(s => ({ photoCursor: (s.photoCursor - 3 + n) % n }));
+    } else if (screen === "photoView" && this.state.photos.length > 0) {
+      const n = this.state.photos.length;
+      this.setState(s => ({ photoCursor: (s.photoCursor - 1 + n) % n }));
+    } else if (screen === "gameSnake") {
+      this.setSnakeDir("up");
+    } else if (screen === "gameSimon") {
+      this.simonInput("up");
+    } else if (screen === "voiceRecorder") {
+      const n = this.state.voiceRecordings.length + 1;
+      this.setState(s => ({ voiceCursor: (s.voiceCursor - 1 + n) % n }));
+    } else if (screen === "ebookLibrary") {
+      const n = this.state.ebooks.length + 1;
+      this.setState(s => ({ ebookCursor: (s.ebookCursor - 1 + n) % n }));
+    } else if (screen === "ebookReader") {
+      this.setState(s => ({ ebookPageIndex: Math.max(0, s.ebookPageIndex - 1) }));
+    } else if (screen === "musicMenu") {
+      this.setState(s => ({ musicMenuCursor: (s.musicMenuCursor - 1 + 5) % 5 }), () => this.scrollListIntoView(this.musicMenuListRef, this.state.musicMenuCursor));
+    } else if (screen === "albumsList") {
+      const n = this.getAlbums().length || 1;
+      this.setState(s => ({ albumsCursor: (s.albumsCursor - 1 + n) % n }), () => this.scrollListIntoView(this.albumListRef, this.state.albumsCursor));
+    } else if (screen === "artistsList") {
+      const n = this.getArtists().length || 1;
+      this.setState(s => ({ artistsCursor: (s.artistsCursor - 1 + n) % n }), () => this.scrollListIntoView(this.artistListRef, this.state.artistsCursor));
+    } else if (screen === "playlists") {
+      const n = playlists.length + 1;
+      this.setState(s => ({ playlistCursor: (s.playlistCursor - 1 + n) % n }), () => this.scrollListIntoView(this.playlistListRef, this.state.playlistCursor));
+    } else if (screen === "songs") {
+      const n = this.getSongsNavCount();
+      this.setState(s => ({ songCursor: (s.songCursor - 1 + n) % n }), () => this.scrollListIntoView(this.songListRef, this.state.songCursor));
+    } else if (screen === "playing") {
+      this.volumeUp();
+    }
+  };
+
+  navDown = () => {
+    this.sfx.back();
+    const { screen, playlists } = this.state;
+    if (screen === "home") {
+      const n = this.appDefs.length;
+      this.setState(s => ({ homeCursor: (s.homeCursor + 1) % n }));
+    } else if (screen === "games") {
+      this.setState(s => ({ gameCursor: (s.gameCursor + 1) % 5 }));
+    } else if (screen === "contactsList") {
+      const n = this.contacts.length;
+      this.setState(s => ({ contactCursor: (s.contactCursor + 1) % n }), this.scrollContactIntoView);
+    } else if (screen === "recentCallsList") {
+      const n = this.recentCalls.length;
+      this.setState(s => ({ recentCallCursor: (s.recentCallCursor + 1) % n }), this.scrollRecentCallIntoView);
+    } else if (screen === "photosList" && this.state.photos.length > 0) {
+      const n = this.state.photos.length;
+      this.setState(s => ({ photoCursor: (s.photoCursor + 3) % n }));
+    } else if (screen === "photoView" && this.state.photos.length > 0) {
+      const n = this.state.photos.length;
+      this.setState(s => ({ photoCursor: (s.photoCursor + 1) % n }));
+    } else if (screen === "gameSnake") {
+      this.setSnakeDir("down");
+    } else if (screen === "gameSimon") {
+      this.simonInput("down");
+    } else if (screen === "gameTetris") {
+      this.moveTetromino(1, 0);
+    } else if (screen === "gameMines") {
+      this.moveMinesCursor(1, 0);
+    } else if (screen === "voiceRecorder") {
+      const n = this.state.voiceRecordings.length + 1;
+      this.setState(s => ({ voiceCursor: (s.voiceCursor + 1) % n }));
+    } else if (screen === "ebookLibrary") {
+      const n = this.state.ebooks.length + 1;
+      this.setState(s => ({ ebookCursor: (s.ebookCursor + 1) % n }));
+    } else if (screen === "ebookReader") {
+      const book = this.getActiveEbook();
+      const max = book ? book.pages.length - 1 : 0;
+      this.setState(s => ({ ebookPageIndex: Math.min(max, s.ebookPageIndex + 1) }));
+    } else if (screen === "musicMenu") {
+      this.setState(s => ({ musicMenuCursor: (s.musicMenuCursor + 1) % 5 }), () => this.scrollListIntoView(this.musicMenuListRef, this.state.musicMenuCursor));
+    } else if (screen === "albumsList") {
+      const n = this.getAlbums().length || 1;
+      this.setState(s => ({ albumsCursor: (s.albumsCursor + 1) % n }), () => this.scrollListIntoView(this.albumListRef, this.state.albumsCursor));
+    } else if (screen === "artistsList") {
+      const n = this.getArtists().length || 1;
+      this.setState(s => ({ artistsCursor: (s.artistsCursor + 1) % n }), () => this.scrollListIntoView(this.artistListRef, this.state.artistsCursor));
+    } else if (screen === "playlists") {
+      const n = playlists.length + 1;
+      this.setState(s => ({ playlistCursor: (s.playlistCursor + 1) % n }), () => this.scrollListIntoView(this.playlistListRef, this.state.playlistCursor));
+    } else if (screen === "songs") {
+      const n = this.getSongsNavCount();
+      this.setState(s => ({ songCursor: (s.songCursor + 1) % n }), () => this.scrollListIntoView(this.songListRef, this.state.songCursor));
+    } else if (screen === "playing") {
+      this.volumeDown();
+    }
+  };
+
+  navBack = () => {
+    this.sfx.back();
+    const { screen, snakeAlive, simonActive } = this.state;
+    const audio = this.audioRef.current;
+    if (screen === "gameSnake") {
+      if (snakeAlive) { this.setSnakeDir("left"); return; }
+      if (this.snakeTimer) clearInterval(this.snakeTimer);
+      this.setState({ screen: "games" });
+      return;
+    }
+    if (screen === "gameSimon") {
+      if (simonActive) { this.simonInput("left"); return; }
+      this.setState({ screen: "games" });
+      return;
+    }
+    if (screen === "gameTetris") {
+      if (this.state.tetrisAlive) { this.moveTetromino(0, -1); return; }
+      if (this.tetrisTimer) clearInterval(this.tetrisTimer);
+      this.setState({ screen: "games" });
+      return;
+    }
+    if (screen === "gameMines") {
+      if (this.state.minesAlive) { this.moveMinesCursor(0, -1); return; }
+      this.setState({ screen: "games" });
+      return;
+    }
+    if (screen === "gameRacer") {
+      if (this.state.racerAlive) { this.moveRacer(-1); return; }
+      if (this.racerTimer) clearInterval(this.racerTimer);
+      this.setState({ screen: "games" });
+      return;
+    }
+    if (screen === "playing") this.setState({ screen: "songs" });
+    else if (screen === "songs") {
+      const mode = this.state.trackListMode;
+      if (mode === "playlist") this.setState({ screen: "playlists" });
+      else if (mode === "album") this.setState({ screen: "albumsList" });
+      else if (mode === "artist") this.setState({ screen: "artistsList" });
+      else this.setState({ screen: "musicMenu" });
+    }
+    else if (screen === "albumsList" || screen === "artistsList") this.setState({ screen: "musicMenu" });
+    else if (screen === "playlists") this.setState({ screen: "musicMenu" });
+    else if (screen === "musicMenu") {
+      if (audio) audio.pause();
+      this.setState({ screen: "home", playing: false });
+    }
+    else if (screen === "appPlaceholder") this.setState({ screen: "home" });
+    else if (screen === "camera") { this.stopCamera(); this.setState({ screen: "home" }); }
+    else if (screen === "voiceRecorder") { this.stopVoiceRecording(); this.setState({ screen: "home" }); }
+    else if (screen === "ebookReader") this.setState({ screen: "ebookLibrary" });
+    else if (screen === "ebookLibrary") this.setState({ screen: "home" });
+    else if (screen === "games") this.setState({ screen: "home" });
+    else if (screen === "photoView") this.setState({ screen: "photosList" });
+    else if (screen === "photosList") this.setState({ screen: "home" });
+    else if (screen === "contactsList") this.setState({ screen: "home" });
+    else if (screen === "recentCallsList") this.setState({ screen: "home" });
+    else if (screen === "callScreen") this.setState({ screen: this.state.calledFrom === "recentCallsList" ? "recentCallsList" : "contactsList" });
+    else if (screen === "home") this.setState({ screen: "standby" });
+  };
+
+  exitGame = () => {
+    this.sfx.back();
+    const { screen } = this.state;
+    if (screen === "gameSnake" && this.snakeTimer) clearInterval(this.snakeTimer);
+    if (screen === "gameTetris" && this.tetrisTimer) clearInterval(this.tetrisTimer);
+    if (screen === "gameRacer" && this.racerTimer) clearInterval(this.racerTimer);
+    if (["gameSnake", "gameSimon", "gameTetris", "gameMines", "gameRacer"].includes(screen)) this.setState({ screen: "games", simonActive: false });
+  };
+
+  selectTrack = (i) => {
+    const list = this.getCurrentTrackList();
+    const t = list[i];
+    if (!t) return;
+    this.setState(s => ({
+      currentIndex: i, songCursor: i, screen: "playing", currentTime: 0, playing: true,
+      recentlyPlayed: [t, ...s.recentlyPlayed.filter(r => r.url !== t.url)].slice(0, 10)
+    }), () => {
+      const audio = this.audioRef.current;
+      if (audio) { audio.currentTime = 0; audio.play(); }
+    });
+  };
+
+  navSelect = () => {
+    this.sfx.back();
+    const { screen, snakeAlive, simonActive } = this.state;
+    if (screen === "gameSnake" && snakeAlive) { this.setSnakeDir("right"); return; }
+    if (screen === "gameSimon" && simonActive) { this.simonInput("right"); return; }
+    if (screen === "gameTetris" && this.state.tetrisAlive) { this.moveTetromino(0, 1); return; }
+    if (screen === "gameMines" && this.state.minesAlive) { this.moveMinesCursor(0, 1); return; }
+    if (screen === "gameRacer" && this.state.racerAlive) { this.moveRacer(1); return; }
+    this.okPress();
+  };
+
+  okPress = () => {
+    this.sfx.back();
+    const { screen, playlistCursor, songCursor, playlists, homeCursor } = this.state;
+    if (screen === "standby") {
+      this.setState({ screen: "home", homeCursor: 0 });
+    } else if (screen === "home") {
+      const app = this.appDefs[homeCursor];
+      if (app.key === "music") this.setState({ screen: "musicMenu", musicMenuCursor: 0 });
+      else if (app.key === "camera") { this.setState({ screen: "camera", cameraError: false }); this.startCamera(); }
+      else if (app.key === "games") { this.setState({ screen: "games", gameCursor: 0 }); }
+      else if (app.key === "contacts") { this.setState({ screen: "contactsList", contactCursor: 0 }); }
+      else if (app.key === "phone") { this.setState({ screen: "recentCallsList", recentCallCursor: 0 }); }
+      else if (app.key === "photos") { this.setState({ screen: "photosList" }); }
+      else if (app.key === "voice") { this.setState({ screen: "voiceRecorder", voiceCursor: 0 }); }
+      else if (app.key === "ebooks") { this.setState({ screen: "ebookLibrary", ebookCursor: 0 }); }
+      else this.setState({ screen: "appPlaceholder", activeAppKey: app.key });
+    } else if (screen === "appPlaceholder") {
+      this.setState({ screen: "home" });
+    } else if (screen === "camera") {
+      this.triggerShutter();
+    } else if (screen === "games") {
+      const key = ["gameSnake", "gameSimon", "gameTetris", "gameMines", "gameRacer"][this.state.gameCursor];
+      this.setState({ screen: key });
+      if (key === "gameSnake") this.startSnake();
+      else if (key === "gameSimon") this.startSimon();
+      else if (key === "gameTetris") this.startTetris();
+      else if (key === "gameMines") this.startMines();
+      else if (key === "gameRacer") this.startRacer();
+    } else if (screen === "gameSnake") {
+      if (!this.state.snakeAlive) this.startSnake();
+    } else if (screen === "gameSimon") {
+      if (!this.state.simonActive) this.startSimon();
+    } else if (screen === "gameTetris") {
+      if (!this.state.tetrisAlive) this.startTetris();
+      else this.hardDropTetris();
+    } else if (screen === "gameMines") {
+      if (!this.state.minesAlive) this.startMines();
+      else this.revealMinesCell(this.state.minesCursorRow, this.state.minesCursorCol);
+    } else if (screen === "gameRacer") {
+      if (!this.state.racerAlive) this.startRacer();
+    } else if (screen === "contactsList") {
+      this.callContact(this.contacts[this.state.contactCursor], "contactsList");
+    } else if (screen === "recentCallsList") {
+      this.callContact(this.recentCalls[this.state.recentCallCursor], "recentCallsList");
+    } else if (screen === "voiceRecorder") {
+      if (this.state.voiceCursor === 0) this.toggleVoiceRecording();
+      else this.playVoiceRecording(this.state.voiceCursor - 1);
+    } else if (screen === "ebookLibrary") {
+      if (this.state.ebookCursor === this.state.ebooks.length) { this.ebookFileInputRef.current && this.ebookFileInputRef.current.click(); return; }
+      const book = this.state.ebooks[this.state.ebookCursor];
+      if (book) this.setState({ screen: "ebookReader", activeEbookId: book.id, ebookPageIndex: 0 });
+    } else if (screen === "photosList") {
+      if (this.state.photos.length === 0) return;
+      this.setState({ screen: "photoView", photoCursor: 0 });
+    } else if (screen === "musicMenu") {
+      this.selectMusicMenuItem(this.state.musicMenuCursor);
+    } else if (screen === "albumsList") {
+      this.openAlbum(this.state.albumsCursor);
+    } else if (screen === "artistsList") {
+      this.openArtist(this.state.artistsCursor);
+    } else if (screen === "playlists") {
+      if (playlistCursor === playlists.length) { this.createPlaylist(); return; }
+      this.setState({ screen: "songs", songCursor: 0, activePlaylistId: playlists[playlistCursor].id, trackListMode: "playlist" });
+    } else if (screen === "songs") {
+      const activePlaylist = this.getActivePlaylist();
+      if (this.state.trackListMode === "playlist" && !activePlaylist.remote && songCursor === activePlaylist.tracks.length) { this.fileInputRef.current && this.fileInputRef.current.click(); return; }
+      this.selectTrack(songCursor);
+    } else if (screen === "playing") {
+      this.playPause();
+    }
+  };
+
+  getStatusColor(screen) {
+    if (screen === "standby") return "#4a4a4e";
+    if (screen === "camera") return "oklch(65% 0.18 250)";
+    if (screen === "voiceRecorder") return "oklch(58% 0.2 25)";
+    if (["musicMenu", "albumsList", "artistsList", "playlists", "songs", "playing"].includes(screen)) return "oklch(60% 0.15 150)";
+    if (["games", "gameSnake", "gameSimon", "gameTetris", "gameMines", "gameRacer"].includes(screen)) return "oklch(58% 0.2 300)";
+    if (["photosList", "photoView"].includes(screen)) return "oklch(80% 0.16 90)";
+    if (["ebookLibrary", "ebookReader"].includes(screen)) return "oklch(65% 0.13 200)";
+    return "oklch(97% 0 0)";
+  }
+
+  renderVals() {
+    const { screen, playlistCursor, songCursor, playing, currentIndex, currentTime, duration, volume, playlists } = this.state;
+    const activePlaylist = this.getActivePlaylist();
+    const currentTrackList = this.getCurrentTrackList();
+    const track = currentTrackList[currentIndex];
+    const progressPct = (duration ? (currentTime / duration * 100) : 0) + "%";
+    const accent = "oklch(45% 0.12 150)";
+    const { homeCursor, activeAppKey } = this.state;
+    const homeItems = this.appDefs.map((app, i) => ({
+      name: app.name, icon: app.icon,
+      isSvgIcon: app.key === "phone" || app.key === "ebooks",
+      maskUrl: app.key === "ebooks" ? "uploads/opened-book.svg" : "uploads/phone-call-icon.svg",
+      maskW: app.key === "ebooks" ? "14px" : "20px",
+      maskH: app.key === "ebooks" ? "14px" : "14px",
+      bg: homeCursor === i ? accent : "transparent",
+      color: homeCursor === i ? "#e8efe0" : "#e6ece0",
+      onClick: () => this.setState({ homeCursor: i }, () => this.okPress())
+    }));
+    const activeApp = this.appDefs.find(a => a.key === activeAppKey);
+    const playlistItems = playlists.map((p, i) => ({
+      name: p.name,
+      bg: playlistCursor === i ? accent : "transparent",
+      color: playlistCursor === i ? "#e8efe0" : "#e6ece0",
+      onClick: () => this.setState({ screen: "songs", songCursor: 0, activePlaylistId: p.id })
+    })).concat([{
+      name: "+ New Playlist",
+      bg: playlistCursor === playlists.length ? accent : "transparent",
+      color: playlistCursor === playlists.length ? "#e8efe0" : "#8a8a8c",
+      onClick: () => this.createPlaylist()
+    }]);
+    const showAddTrack = this.state.trackListMode === "playlist" && !activePlaylist.remote;
+    const songItems = currentTrackList.map((t, i) => ({
+      name: t.name,
+      bg: songCursor === i ? accent : "transparent",
+      color: songCursor === i ? "#e8efe0" : "#e6ece0",
+      onClick: () => this.selectTrack(i)
+    })).concat(showAddTrack ? [{
+      name: "+ Add Track",
+      bg: songCursor === currentTrackList.length ? accent : "transparent",
+      color: songCursor === currentTrackList.length ? "#e8efe0" : "#8a8a8c",
+      onClick: () => this.fileInputRef.current && this.fileInputRef.current.click()
+    }] : []);
+    const musicMenuDefs = ["Albums", "Artists", "Songs", "Playlists", "Recently Played"];
+    const musicMenuItems = musicMenuDefs.map((name, i) => ({
+      name,
+      bg: this.state.musicMenuCursor === i ? accent : "transparent",
+      color: this.state.musicMenuCursor === i ? "#e8efe0" : "#e6ece0",
+      onClick: () => this.setState({ musicMenuCursor: i }, () => this.selectMusicMenuItem(i))
+    }));
+    const albumItems = this.getAlbums().map((a, i) => ({
+      name: a.name,
+      bg: this.state.albumsCursor === i ? accent : "transparent",
+      color: this.state.albumsCursor === i ? "#e8efe0" : "#e6ece0",
+      onClick: () => this.setState({ albumsCursor: i }, () => this.openAlbum(i))
+    }));
+    const artistItems = this.getArtists().map((a, i) => ({
+      name: a.name,
+      bg: this.state.artistsCursor === i ? accent : "transparent",
+      color: this.state.artistsCursor === i ? "#e8efe0" : "#e6ece0",
+      onClick: () => this.setState({ artistsCursor: i }, () => this.openArtist(i))
+    }));
+    const listTitle = this.state.trackListMode === "playlist" ? activePlaylist.name.toUpperCase() : this.state.trackListTitle;
+    const activeLoading = this.state.trackListMode === "playlist" && activePlaylist.remote && activePlaylist.loading;
+    const songsEmpty = songItems.length === 0;
+    const songsEmptyMessage = activeLoading ? "LOADING\u2026" : "NO SONGS FOUND";
+    return {
+      cassetteSpinAnim: this.state.cassetteSpinning ? "cdSpin 0.8s linear infinite" : "none",
+      toggleCassette: this.toggleCassette,
+      stickyRotate: this.state.stickyFlipped ? 25 : 4,
+      toggleSticky: this.toggleSticky,
+      penJiggle: this.state.penJiggle ? 20 : 0,
+      jigglePen: this.jigglePen,
+      isStandby: screen === "standby",
+      isHome: screen === "home",
+      isAppPlaceholder: screen === "appPlaceholder",
+      isCamera: screen === "camera",
+      isGamesMenu: screen === "games",
+      isContactsList: screen === "contactsList",
+      contactListRef: this.contactListRef,
+      contactItems: this.contacts.map((c, i) => ({
+        name: c.name, number: c.number,
+        bg: this.state.contactCursor === i && screen === "contactsList" ? "oklch(45% 0.12 150)" : "transparent",
+        color: this.state.contactCursor === i && screen === "contactsList" ? "#e8efe0" : "#e6ece0",
+        onCall: () => this.callContact(c, "contactsList")
+      })),
+      isRecentCallsList: screen === "recentCallsList",
+      recentCallListRef: this.recentCallListRef,
+      keyboardOpen: this.state.keyboardOpen,
+      keyboardTrayOffset: this.state.keyboardOpen ? "352px" : "0px",
+      composeText: this.state.composeText || "",
+      keyboardRows: this.buildKeyboardRows(),
+      closeKeyboard: this.closeKeyboard,
+      recentCallItems: this.recentCalls.map((rc, i) => ({
+        label: rc.name || rc.number,
+        bg: this.state.recentCallCursor === i && screen === "recentCallsList" ? "oklch(45% 0.12 150)" : "transparent",
+        color: this.state.recentCallCursor === i && screen === "recentCallsList" ? "#e8efe0" : "#e6ece0",
+        onCall: () => this.callContact(rc, "recentCallsList")
+      })),
+      isVoiceRecorder: screen === "voiceRecorder",
+      voiceStatus: this.state.voiceError ? "MIC UNAVAILABLE" : this.state.voiceRecording ? "RECORDING " + this.formatVoiceTime(this.state.voiceElapsed) + " — OK TO STOP" : "PRESS OK TO RECORD",
+      recordDotBg: this.state.voiceRecording ? "oklch(60% 0.2 25)" : "#2e2e30",
+      recordDotShadow: this.state.voiceRecording ? "0 0 10px oklch(60% 0.2 25 / 0.7)" : "none",
+      recordIconRadius: this.state.voiceRecording ? "3px" : "50%",
+      voiceListRef: this.voiceListRef,
+      voiceAudioRef: this.voiceAudioRef,
+      voicePlayUrl: this.state.voicePlayUrl,
+      onVoicePlayEnded: this.onVoicePlayEnded,
+      voiceItems: this.state.voiceRecordings.map((r, i) => ({
+        name: (this.state.voicePlayIndex === i ? "▶ " : "") + r.name + " (" + this.formatVoiceTime(r.duration) + ")",
+        filename: r.name.replace(/\s+/g, "-").toLowerCase() + ".webm",
+        url: r.url,
+        bg: this.state.voiceCursor === i + 1 && screen === "voiceRecorder" ? "oklch(45% 0.12 150)" : "transparent",
+        color: this.state.voiceCursor === i + 1 && screen === "voiceRecorder" ? "#e8efe0" : "#e6ece0",
+        onClick: () => this.setState({ voiceCursor: i + 1 }, () => this.playVoiceRecording(i))
+      })),
+      isEbookLibrary: screen === "ebookLibrary",
+      isEbookReader: screen === "ebookReader",
+      ebookListRef: this.ebookListRef,
+      ebookFileInputRef: this.ebookFileInputRef,
+      handleEbookFile: this.handleEbookFile,
+      ebookItems: this.state.ebooks.map((b, i) => ({
+        name: b.name,
+        bg: this.state.ebookCursor === i && screen === "ebookLibrary" ? "oklch(45% 0.12 150)" : "transparent",
+        color: this.state.ebookCursor === i && screen === "ebookLibrary" ? "#e8efe0" : "#e6ece0",
+        onClick: () => this.setState({ ebookCursor: i, screen: "ebookReader", activeEbookId: b.id, ebookPageIndex: 0 })
+      })).concat([{
+        name: "+ Add Book",
+        bg: this.state.ebookCursor === this.state.ebooks.length && screen === "ebookLibrary" ? "oklch(45% 0.12 150)" : "transparent",
+        color: this.state.ebookCursor === this.state.ebooks.length && screen === "ebookLibrary" ? "#e8efe0" : "#8a8a8c",
+        onClick: () => this.ebookFileInputRef.current && this.ebookFileInputRef.current.click()
+      }]),
+      activeEbookName: (this.getActiveEbook() || {}).name || "",
+      ebookPageLabel: (this.getActiveEbook() ? (this.state.ebookPageIndex + 1) + " / " + this.getActiveEbook().pages.length : ""),
+      ebookPageText: (this.getActiveEbook() ? this.getActiveEbook().pages[this.state.ebookPageIndex] : ""),
+      isCallScreen: screen === "callScreen",
+      callStatus: "CALLING…",
+      callContactName: (this.state.callContact || {}).name || (this.state.callContact || {}).number || "",
+      callContactNumber: (this.state.callContact || {}).number || "",
+      isPhotosList: screen === "photosList",
+      isPhotoView: screen === "photoView",
+      hasNoPhotos: this.state.photos.length === 0,
+      photoItems: this.state.photos.map((p, i) => ({
+        url: p.url,
+        shadow: this.state.photoCursor === i && screen === "photosList" ? "0 0 0 2px oklch(45% 0.12 150)" : "none",
+        onClick: () => this.setState({ photoCursor: i, screen: "photoView" })
+      })),
+      hasActivePhoto: !!(this.state.photos[this.state.photoCursor] && this.state.photos[this.state.photoCursor].url),
+      activePhotoUrl: (this.state.photos[this.state.photoCursor] || {}).url || "",
+      activePhotoName: "sky-photo-" + ((this.state.photos[this.state.photoCursor] || {}).id || "") + ".png",
+      isGameSnake: screen === "gameSnake",
+      isGameSimon: screen === "gameSimon",
+      isGameTetris: screen === "gameTetris",
+      isGameMines: screen === "gameMines",
+      isGameRacer: screen === "gameRacer",
+      gameItems: ["Snake", "Simon", "Tetris", "Minesweeper", "Pixel Racer"].map((name, i) => ({
+        name,
+        bg: this.state.gameCursor === i ? "oklch(45% 0.12 150)" : "transparent",
+        color: this.state.gameCursor === i ? "#e8efe0" : "#e6ece0",
+        onClick: () => this.setState({ gameCursor: i }, () => this.okPress())
+      })),
+      snakeCells: (() => {
+        const cells = [];
+        const bodySet = new Set(this.state.snakeBody.map(s => s.x + "," + s.y));
+        const headKey = this.state.snakeBody[0] ? this.state.snakeBody[0].x + "," + this.state.snakeBody[0].y : "";
+        for (let y = 0; y < 15; y++) for (let x = 0; x < 15; x++) {
+          const key = x + "," + y;
+          let color = "transparent", size = "0", radius = "2px", shadow = "none";
+          if (this.state.snakeFood && this.state.snakeFood.x === x && this.state.snakeFood.y === y) {
+            color = "#f2f2ef"; size = "32%"; radius = "50%"; shadow = "0 0 3px rgba(255,255,255,0.5)";
+          } else if (key === headKey) {
+            color = "linear-gradient(155deg,#f5f5f2,#c8c8c4)"; size = "58%"; radius = "3px"; shadow = "0 1px 2px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.6)";
+          } else if (bodySet.has(key)) {
+            color = "linear-gradient(155deg,#d8d8d4,#a8a8a4)"; size = "48%"; radius = "3px"; shadow = "0 1px 2px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.4)";
+          }
+          cells.push({ color, size, radius, shadow });
+        }
+        return cells;
+      })(),
+      snakeStatus: !this.state.snakeStarted ? "PRESS OK TO START" : this.state.snakeAlive ? "SCORE " + this.state.snakeScore : "GAME OVER — SCORE " + this.state.snakeScore + " — OK TO RETRY",
+      simonStatus: this.state.simonMessage,
+      simonUpColor: this.state.simonPlaybackIndex >= 0 && this.state.simonSequence[this.state.simonPlaybackIndex] === "up" ? "oklch(70% 0.16 150)" : "#20302a",
+      simonDownColor: this.state.simonPlaybackIndex >= 0 && this.state.simonSequence[this.state.simonPlaybackIndex] === "down" ? "oklch(70% 0.16 150)" : "#20302a",
+      simonLeftColor: this.state.simonPlaybackIndex >= 0 && this.state.simonSequence[this.state.simonPlaybackIndex] === "left" ? "oklch(70% 0.16 150)" : "#20302a",
+      simonRightColor: this.state.simonPlaybackIndex >= 0 && this.state.simonSequence[this.state.simonPlaybackIndex] === "right" ? "oklch(70% 0.16 150)" : "#20302a",
+      tetrisCells: (() => {
+        const cells = [];
+        const board = this.state.tetrisBoard;
+        const overlay = Array.from({ length: this.tetrisRows }, (_, r) => (board[r] ? board[r].slice() : Array(this.tetrisCols).fill(null)));
+        if (this.state.tetrisPiece && this.state.tetrisAlive) {
+          this.getPieceCells(this.state.tetrisPiece, this.state.tetrisRot).forEach(([r, c]) => {
+            const nr = this.state.tetrisRow + r, nc = this.state.tetrisCol + c;
+            if (nr >= 0 && nr < this.tetrisRows && nc >= 0 && nc < this.tetrisCols) overlay[nr][nc] = this.state.tetrisPiece.color;
+          });
+        }
+        for (let r = 0; r < this.tetrisRows; r++) for (let c = 0; c < this.tetrisCols; c++) {
+          const color = overlay[r][c];
+          cells.push({ color: color || "#161618", shadow: color ? "inset 0 1px 1px rgba(255,255,255,0.35), inset 0 -1px 1px rgba(0,0,0,0.35)" : "none" });
+        }
+        return cells;
+      })(),
+      tetrisStatus: !this.state.tetrisStarted ? "PRESS OK TO START" : this.state.tetrisAlive ? "SCORE " + this.state.tetrisScore : "GAME OVER — SCORE " + this.state.tetrisScore + " — OK TO RETRY",
+      minesCells: (() => {
+        const cells = [];
+        const board = this.state.minesBoard;
+        const numColors = ["", "#8fbfe8", "#8fe0a8", "#e8c88f", "#e89f8f", "#e88fce", "#c88fe8", "#e8e08f", "#c9c9c9"];
+        for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+          const cell = board[r] && board[r][c];
+          const isCursor = this.state.minesCursorRow === r && this.state.minesCursorCol === c;
+          let bg = "#20302a", label = "", color = "#e6ece0";
+          if (cell && cell.revealed) {
+            if (cell.mine) { bg = "oklch(55% 0.2 25)"; label = "●"; }
+            else { bg = "#12181a"; label = cell.count ? String(cell.count) : ""; color = numColors[cell.count] || "#e6ece0"; }
+          }
+          cells.push({ bg: isCursor ? "oklch(45% 0.12 150)" : bg, label, color, shadow: isCursor ? "0 0 0 1px #e6ece0 inset" : "none" });
+        }
+        return cells;
+      })(),
+      minesStatus: !this.state.minesStarted ? "PRESS OK TO REVEAL" : this.state.minesWon ? "YOU WIN! — OK TO RETRY" : this.state.minesAlive ? "MINES: 10 — OK TO REVEAL" : "BOOM! GAME OVER — OK TO RETRY",
+      racerCells: (() => {
+        const cells = [];
+        const obByCell = new Set(this.state.racerObstacles.map(o => o.row + "," + o.lane));
+        for (let r = 0; r < this.racerVisibleRows; r++) for (let lane = 0; lane < this.racerLanes; lane++) {
+          const isPlayer = r === this.racerVisibleRows - 1 && lane === this.state.racerPlayerLane;
+          const isObstacle = obByCell.has(r + "," + lane);
+          let color = "transparent", size = "0", radius = "3px";
+          if (isPlayer) { color = "oklch(65% 0.18 150)"; size = "62%"; }
+          else if (isObstacle) { color = "oklch(58% 0.2 25)"; size = "58%"; }
+          cells.push({ color, size, radius });
+        }
+        return cells;
+      })(),
+      racerStatus: !this.state.racerStarted ? "PRESS OK TO START" : this.state.racerAlive ? "SCORE " + this.state.racerScore : "CRASH! — SCORE " + this.state.racerScore + " — OK TO RETRY",
+      cameraVideoRef: this.cameraVideoRef,
+      cameraCanvasRef: this.cameraCanvasRef,
+      cameraError: this.state.cameraError,
+      shutterFlash: this.state.shutterFlash,
+      shutterLabel: this.state.shutterLabel,
+      isMusicMenu: screen === "musicMenu",
+      isAlbumsList: screen === "albumsList",
+      isArtistsList: screen === "artistsList",
+      musicMenuItems, albumItems, artistItems,
+      musicMenuListRef: this.musicMenuListRef,
+      albumListRef: this.albumListRef,
+      artistListRef: this.artistListRef,
+      playlistListRef: this.playlistListRef,
+      songListRef: this.songListRef,
+      isPlaylists: screen === "playlists",
+      isSongs: screen === "songs",
+      isPlaying: screen === "playing",
+      homeItems,
+      activeAppName: activeApp ? activeApp.name : "",
+      playlistItems, songItems, songsEmpty, songsEmptyMessage,
+      listTitle,
+      playingName: track ? track.name : "",
+      trackUrl: track ? track.url : null,
+      cdSpinState: playing ? "running" : "paused",
+      progressPct,
+      volume,
+      volumePct: (volume * 100) + "%",
+      volumeTrackRef: this.volumeTrackRef,
+      startVolumeDrag: this.startVolumeDrag,
+      statusDotColor: this.getStatusColor(screen),
+      statusDotGlow: screen === "standby" ? "none" : "0 0 6px " + this.getStatusColor(screen).replace(")", " / 0.7)"),
+      dots: [0,1,2,3,4,5,6],
+      navUp: this.navUp,
+      navDown: this.navDown,
+      navBack: this.navBack,
+      navSelect: this.navSelect,
+      okPress: this.okPress,
+      deviceRef: this.deviceRef,
+      handleTiltMove: this.handleTiltMove,
+      handleTiltLeave: this.handleTiltLeave,
+      tiltX: this.state.tiltX,
+      tiltY: this.state.tiltY,
+      deviceShadow: "-" + (16 - this.state.tiltY * 3) + "px " + (30 + this.state.tiltX * 3) + "px " + (46 + Math.abs(this.state.tiltX + this.state.tiltY) * 2) + "px -14px rgba(0,0,0,0.65), inset 2px -2px 0 rgba(255,255,255,0.09), inset -3px 3px 5px rgba(0,0,0,0.35)",
+      onTimeUpdate: this.onTimeUpdate,
+      onEnded: this.onEnded,
+      audioRef: this.audioRef,
+      fileInputRef: this.fileInputRef,
+      handleFiles: this.handleFiles
+    };
+  }
+}
+</script>
+</body>
+</html>
