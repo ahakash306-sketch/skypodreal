@@ -13,18 +13,13 @@
   @keyframes cdSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   @keyframes coffeeSwirl { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
   @keyframes coffeeShine { 0%, 100% { transform: translate(0,0) scale(1); opacity: 0.65; } 50% { transform: translate(5px,-3px) scale(1.1); opacity: 0.95; } }
+  @keyframes liquidWobble { 0%, 100% { border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%; transform: rotate(0deg); } 33% { border-radius: 54% 46% 49% 51% / 47% 53% 47% 53%; transform: rotate(4deg); } 66% { border-radius: 47% 53% 52% 48% / 53% 46% 54% 46%; transform: rotate(-4deg); } }
+  @keyframes liquidGlint { 0%, 100% { transform: translate(0,0) scale(1); opacity: 0.55; } 50% { transform: translate(14px,-10px) scale(1.12); opacity: 0.9; } }
 </style>
 </helmet>
 
 <div onMouseMove="{{ bgHoverMove }}" onMouseLeave="{{ closeMask }}" style="height:100vh; height:100dvh; width:100vw; width:100dvw; display:flex; align-items:center; justify-content:center; padding:12px; box-sizing:border-box; position:relative; overflow:hidden; cursor:none; background-color:#efefef;">
-  <div style="position:absolute; inset:0; background-image:url('bg-first-frame.png'); background-size:cover; background-position:center; pointer-events:none;"></div>
-  <div ref="{{ maskPosRef }}" style="position:absolute; left:0; top:0; width:320px; height:320px; pointer-events:none; will-change:transform;">
-    <div style="width:100%; height:100%; overflow:hidden; -webkit-mask-image:radial-gradient(closest-side, rgba(0,0,0,1) 38%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0) 100%); mask-image:radial-gradient(closest-side, rgba(0,0,0,1) 38%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0) 100%); transform:scale({{ maskScale }}); opacity:{{ maskOpacity }}; transition:transform 0.6s cubic-bezier(0.22,0.61,0.36,1), opacity 0.6s ease;">
-      <video ref="{{ revealVideoRef }}" src="uploads/Animate_elements_in_place_202608212152.mp4" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="metadata" style="position:absolute; left:0; top:0; width:100vw; height:100vh; object-fit:cover; will-change:transform;"></video>
-    </div>
-  </div>
-  <div ref="{{ cursorDotRef }}" style="position:absolute; left:0; top:0; width:12px; height:12px; border-radius:50%; background:#f4f4f7; box-shadow:0 0 12px rgba(255,255,255,0.55); pointer-events:none; z-index:60; will-change:transform;"></div>
-  <div ref="{{ cursorRingRef }}" style="position:absolute; left:0; top:0; width:34px; height:34px; border-radius:50%; border:1px solid rgba(255,255,255,0.5); pointer-events:none; z-index:59; will-change:transform;"></div>
+  <x-import component-from-global-scope="fluid-lens" from="./fluid-lens.js" video="uploads/now_create_a_video_where_all_t.mp4" still="bg-first-frame.png" radius="125" hint-size="100%,100%" style="position:absolute; inset:0;"></x-import>
   <div style="position:absolute; inset:0; background:rgba(0,0,0,0.4); pointer-events:none;"></div>
 
   <a href="https://experiments.itssky.co.in" target="_blank" rel="noopener" style="position:absolute; top:16px; left:16px; z-index:20; display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:999px; border:0.5px solid rgba(255,255,255,0.35); background:linear-gradient(345deg, #2b2b2e 0%, #1a1a1c 100%); color:#e6ece0; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; box-shadow:-4px 8px 16px -6px rgba(0,0,0,0.7), inset 0 1px 1px rgba(255,255,255,0.22);" style-hover="background:linear-gradient(345deg, #3a3a3e 0%, #232326 100%); color:#ffffff;">Visit the lab</a>
@@ -387,8 +382,8 @@
 
   <input type="file" ref="{{ fileInputRef }}" accept="audio/*" multiple style="display:none" onChange="{{ handleFiles }}" />
   <input type="file" ref="{{ ebookFileInputRef }}" accept=".txt,text/plain" style="display:none" onChange="{{ handleEbookFile }}" />
-  <audio ref="{{ audioRef }}" src="{{ trackUrl }}" onTimeUpdate="{{ onTimeUpdate }}" onEnded="{{ onEnded }}" style="display:none"></audio>
-  <audio ref="{{ voiceAudioRef }}" src="{{ voicePlayUrl }}" onEnded="{{ onVoicePlayEnded }}" style="display:none"></audio>
+  <sc-if value="{{ trackUrl }}" hint-placeholder-val="{{ false }}"><audio ref="{{ audioRef }}" src="{{ trackUrl }}" onTimeUpdate="{{ onTimeUpdate }}" onEnded="{{ onEnded }}" style="display:none"></audio></sc-if>
+  <sc-if value="{{ voicePlayUrl }}" hint-placeholder-val="{{ false }}"><audio ref="{{ voiceAudioRef }}" src="{{ voicePlayUrl }}" onEnded="{{ onVoicePlayEnded }}" style="display:none"></audio></sc-if>
   </div>
 </div>
 
@@ -398,10 +393,6 @@ class Component extends DCLogic {
   audioRef = React.createRef();
   volumeTrackRef = React.createRef();
   deviceRef = React.createRef();
-  revealVideoRef = React.createRef();
-  maskPosRef = React.createRef();
-  cursorDotRef = React.createRef();
-  cursorRingRef = React.createRef();
   fileInputRef = React.createRef();
   contactListRef = React.createRef();
   recentCallListRef = React.createRef();
@@ -579,10 +570,27 @@ class Component extends DCLogic {
     } catch (e) {}
   }
 
+  haptic = (pattern) => {
+    try { if (navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+    const el = this.deviceRef.current;
+    if (!el) return;
+    clearTimeout(this.hapticTimer);
+    const amt = Array.isArray(pattern) ? 1.6 : 1.1;
+    el.style.setProperty("--kick", amt);
+    el.animate(
+      [
+        { transform: el.style.transform + " translateY(0px)" },
+        { transform: el.style.transform + " translateY(" + amt + "px)" },
+        { transform: el.style.transform + " translateY(0px)" }
+      ],
+      { duration: 110, easing: "ease-out" }
+    );
+  };
+
   sfx = {
-    click: () => this.playTone(1200, 0.025, { type: "square", vol: 0.04 }),
-    select: () => { this.playTone(700, 0.05, { type: "triangle", vol: 0.06 }); this.playTone(1050, 0.06, { type: "triangle", vol: 0.05, delay: 0.05 }); },
-    back: () => this.playTone(500, 0.07, { type: "triangle", vol: 0.05, toFreq: 300 }),
+    click: () => { this.haptic(8); this.playTone(1200, 0.025, { type: "square", vol: 0.04 }); },
+    select: () => { this.haptic(14); this.playTone(700, 0.05, { type: "triangle", vol: 0.06 }); this.playTone(1050, 0.06, { type: "triangle", vol: 0.05, delay: 0.05 }); },
+    back: () => { this.haptic([10, 30, 8]); this.playTone(500, 0.07, { type: "triangle", vol: 0.05, toFreq: 300 }); },
     shutter: () => { this.playNoise(0.03, { vol: 0.22, filterFreq: 3200 }); this.playNoise(0.02, { vol: 0.16, filterFreq: 1200, delay: 0.05 }); },
     recordStart: () => this.playTone(600, 0.09, { type: "sine", vol: 0.06, toFreq: 900 }),
     recordStop: () => this.playTone(900, 0.09, { type: "sine", vol: 0.06, toFreq: 500 }),
@@ -1170,11 +1178,7 @@ class Component extends DCLogic {
     this.pointer.x = e.clientX;
     this.pointer.y = e.clientY;
     if (!this.cursorRaf) this.cursorRaf = requestAnimationFrame(this.tickCursor);
-    if (!this.state.maskOpen) {
-      const v = this.revealVideoRef.current;
-      if (v) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
-      this.setState({ maskOpen: true });
-    }
+
   };
 
   pointer = { x: -400, y: -400 };
@@ -1184,14 +1188,6 @@ class Component extends DCLogic {
     const t = this.trail, p = this.pointer;
     t.x += (p.x - t.x) * 0.16;
     t.y += (p.y - t.y) * 0.16;
-    const dot = this.cursorDotRef.current;
-    if (dot) dot.style.transform = "translate3d(" + (p.x - 6) + "px," + (p.y - 6) + "px,0)";
-    const ring = this.cursorRingRef.current;
-    if (ring) ring.style.transform = "translate3d(" + (t.x - 17) + "px," + (t.y - 17) + "px,0)";
-    const mp = this.maskPosRef.current;
-    if (mp) mp.style.transform = "translate3d(" + (t.x - 160) + "px," + (t.y - 160) + "px,0)";
-    const v = this.revealVideoRef.current;
-    if (v) v.style.transform = "translate3d(" + (160 - t.x) + "px," + (160 - t.y) + "px,0)";
     if (Math.abs(p.x - t.x) < 0.5 && Math.abs(p.y - t.y) < 0.5) {
       this.cursorRaf = null;
       return;
@@ -1199,15 +1195,7 @@ class Component extends DCLogic {
     this.cursorRaf = requestAnimationFrame(this.tickCursor);
   };
 
-  closeMask = () => {
-    if (this.cursorRaf) { cancelAnimationFrame(this.cursorRaf); this.cursorRaf = null; }
-    this.setState({ maskOpen: false });
-    clearTimeout(this.maskPauseTimer);
-    this.maskPauseTimer = setTimeout(() => {
-      const rv = this.revealVideoRef.current;
-      if (rv) rv.pause();
-    }, 700);
-  };
+  closeMask = () => {};
 
   updateFitScale = () => {
     const el = this.deviceRef.current;
@@ -1223,8 +1211,9 @@ class Component extends DCLogic {
     window.addEventListener("keydown", this.handleKeyDown);
     window.addEventListener("resize", this.updateFitScale);
     this.updateFitScale();
-    const rv = this.revealVideoRef.current;
-    if (rv) rv.pause();
+    setTimeout(() => {
+      document.querySelectorAll("video").forEach(v => { v.muted = true; v.defaultMuted = true; v.volume = 0; });
+    }, 400);
     setTimeout(this.updateFitScale, 300);
     this.setState(s => ({
       ebooks: s.ebooks.map(b => b.pages ? b : { ...b, pages: this.paginateText(this.defaultEbookTexts[b.id] || "") })
@@ -1941,12 +1930,6 @@ class Component extends DCLogic {
       handleTiltLeave: this.handleTiltLeave,
       bgHoverMove: this.bgHoverMove,
       closeMask: this.closeMask,
-      revealVideoRef: this.revealVideoRef,
-      maskPosRef: this.maskPosRef,
-      cursorDotRef: this.cursorDotRef,
-      cursorRingRef: this.cursorRingRef,
-      maskScale: this.state.maskOpen ? 1 : 0.2,
-      maskOpacity: this.state.maskOpen ? 1 : 0,
       fitScale: this.state.fitScale,
       tiltX: this.state.tiltX,
       tiltY: this.state.tiltY,
