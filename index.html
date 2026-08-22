@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
-  <script type="text/javascript">
+<script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
         t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -212,62 +212,62 @@
       </sc-if>
 
       <sc-if value="{{ isGameSnake }}" hint-placeholder-val="{{ false }}">
-        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
-          <div style="display:grid; grid-template-columns:repeat(15, 1fr); grid-template-rows:repeat(15, 1fr); gap:1px; width:100%; aspect-ratio:1/1; background:#0a0a0b; background-image:linear-gradient(#161618 1px, transparent 1px), linear-gradient(90deg, #161618 1px, transparent 1px); background-size:calc(100% / 15) calc(100% / 15); border-radius:6px; padding:2px; box-sizing:border-box;">
+        <div style="height:100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:2px 0; gap:8px;">
+          <div style="flex:1 1 auto; min-height:0; width:100%; display:flex; align-items:center; justify-content:center;"><div style="display:grid; grid-template-columns:repeat(15, 1fr); grid-template-rows:repeat(15, 1fr); gap:1px; flex:none; height:100%; width:auto; min-width:0; max-width:100%; aspect-ratio:1/1; background:#0a0a0b; background-image:linear-gradient(#161618 1px, transparent 1px), linear-gradient(90deg, #161618 1px, transparent 1px); background-size:calc(100% / 15) calc(100% / 15); border-radius:6px; padding:2px; box-sizing:border-box;">
             <sc-for list="{{ snakeCells }}" as="cell" hint-placeholder-count="225">
               <div style="display:flex; align-items:center; justify-content:center;">
                 <div style="width:{{ cell.size }}; height:{{ cell.size }}; border-radius:{{ cell.radius }}; background:{{ cell.color }}; box-shadow:{{ cell.shadow }};"></div>
               </div>
             </sc-for>
-          </div>
-          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ snakeStatus }}</div>
+          </div></div>
+          <div style="flex:0 0 auto; font-size:10px; letter-spacing:0.08em; color:#9fb08f; padding-top:6px;">{{ snakeStatus }}</div>
         </div>
       </sc-if>
 
       <sc-if value="{{ isGameSimon }}" hint-placeholder-val="{{ false }}">
-        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;">
-          <div style="position:relative; width:80%; aspect-ratio:1/1;">
+        <div style="height:100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:2px 0; gap:10px;">
+          <div style="flex:1 1 auto; min-height:0; width:100%; display:flex; align-items:center; justify-content:center;"><div style="position:relative; flex:none; height:100%; width:auto; min-width:0; max-width:80%; aspect-ratio:1/1;">
             <div style="position:absolute; top:0; left:50%; transform:translateX(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonUpColor }};"></div>
             <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonDownColor }};"></div>
             <div style="position:absolute; left:0; top:50%; transform:translateY(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonLeftColor }};"></div>
             <div style="position:absolute; right:0; top:50%; transform:translateY(-50%); width:38%; height:38%; border-radius:8px; background:{{ simonRightColor }};"></div>
-          </div>
-          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ simonStatus }}</div>
+          </div></div>
+          <div style="flex:0 0 auto; font-size:10px; letter-spacing:0.08em; color:#9fb08f; padding-top:6px;">{{ simonStatus }}</div>
         </div>
       </sc-if>
 
       <sc-if value="{{ isGameTetris }}" hint-placeholder-val="{{ false }}">
-        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
-          <div style="display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(14, 1fr); gap:1px; width:78%; aspect-ratio:8/14; background:#0a0a0b; border-radius:6px; padding:2px; box-sizing:border-box;">
+        <div style="height:100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:2px 0; gap:8px;">
+          <div style="flex:1 1 auto; min-height:0; width:100%; display:flex; align-items:center; justify-content:center;"><div style="display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(14, 1fr); gap:1px; flex:none; height:100%; width:auto; min-width:0; max-width:78%; aspect-ratio:8/14; background:#0a0a0b; border-radius:6px; padding:2px; box-sizing:border-box;">
             <sc-for list="{{ tetrisCells }}" as="cell" hint-placeholder-count="112">
               <div style="background:{{ cell.color }}; border-radius:1px; box-shadow:{{ cell.shadow }};"></div>
             </sc-for>
-          </div>
-          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ tetrisStatus }}</div>
+          </div></div>
+          <div style="flex:0 0 auto; font-size:10px; letter-spacing:0.08em; color:#9fb08f; padding-top:6px;">{{ tetrisStatus }}</div>
         </div>
       </sc-if>
 
       <sc-if value="{{ isGameMines }}" hint-placeholder-val="{{ false }}">
-        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
-          <div style="display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(8, 1fr); gap:1px; width:82%; aspect-ratio:1/1; background:#0a0a0b; border-radius:6px; padding:2px; box-sizing:border-box;">
+        <div style="height:100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:2px 0; gap:8px;">
+          <div style="flex:1 1 auto; min-height:0; width:100%; display:flex; align-items:center; justify-content:center;"><div style="display:grid; grid-template-columns:repeat(8, 1fr); grid-template-rows:repeat(8, 1fr); gap:1px; flex:none; height:100%; width:auto; min-width:0; max-width:82%; aspect-ratio:1/1; background:#0a0a0b; border-radius:6px; padding:2px; box-sizing:border-box;">
             <sc-for list="{{ minesCells }}" as="cell" hint-placeholder-count="64">
               <div style="display:flex; align-items:center; justify-content:center; background:{{ cell.bg }}; border-radius:1px; box-shadow:{{ cell.shadow }}; font-size:9px; font-weight:700; color:{{ cell.color }};">{{ cell.label }}</div>
             </sc-for>
-          </div>
-          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ minesStatus }}</div>
+          </div></div>
+          <div style="flex:0 0 auto; font-size:10px; letter-spacing:0.08em; color:#9fb08f; padding-top:6px;">{{ minesStatus }}</div>
         </div>
       </sc-if>
 
       <sc-if value="{{ isGameRacer }}" hint-placeholder-val="{{ false }}">
-        <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
-          <div style="display:grid; grid-template-columns:repeat(5, 1fr); grid-template-rows:repeat(10, 1fr); gap:1px; width:70%; aspect-ratio:5/10; background:#0a0a0b; background-image:linear-gradient(#161618 1px, transparent 1px); background-size:100% calc(100% / 10); border-radius:6px; padding:2px; box-sizing:border-box;">
+        <div style="height:100%; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center; box-sizing:border-box; padding:2px 0; gap:8px;">
+          <div style="flex:1 1 auto; min-height:0; width:100%; display:flex; align-items:center; justify-content:center;"><div style="display:grid; grid-template-columns:repeat(5, 1fr); grid-template-rows:repeat(10, 1fr); gap:1px; flex:none; height:100%; width:auto; min-width:0; max-width:70%; aspect-ratio:5/10; background:#0a0a0b; background-image:linear-gradient(#161618 1px, transparent 1px); background-size:100% calc(100% / 10); border-radius:6px; padding:2px; box-sizing:border-box;">
             <sc-for list="{{ racerCells }}" as="cell" hint-placeholder-count="50">
               <div style="display:flex; align-items:center; justify-content:center;">
                 <div style="width:{{ cell.size }}; height:{{ cell.size }}; border-radius:{{ cell.radius }}; background:{{ cell.color }};"></div>
               </div>
             </sc-for>
-          </div>
-          <div style="font-size:10px; letter-spacing:0.08em; color:#9fb08f;">{{ racerStatus }}</div>
+          </div></div>
+          <div style="flex:0 0 auto; font-size:10px; letter-spacing:0.08em; color:#9fb08f; padding-top:6px;">{{ racerStatus }}</div>
         </div>
       </sc-if>
 
