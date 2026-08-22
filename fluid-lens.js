@@ -117,6 +117,7 @@
 
       const pointer = { x: -9999, y: -9999 };
       const damped = { x: -9999, y: -9999 };
+      const vel = { x: 0, y: 0 };
       let wantOpen = false;
 
       window.addEventListener("pointermove", (e) => {
@@ -134,8 +135,14 @@
 
       const clock = { t0: performance.now() };
       const loop = () => {
-        damped.x += (pointer.x - damped.x) * 0.045;
-        damped.y += (pointer.y - damped.y) * 0.045;
+        // critically damped spring — smoother acceleration/settle than a plain lerp
+        const k = 0.022, d = 0.24;
+        vel.x += (pointer.x - damped.x) * k;
+        vel.y += (pointer.y - damped.y) * k;
+        vel.x *= 1 - d;
+        vel.y *= 1 - d;
+        damped.x += vel.x;
+        damped.y += vel.y;
         uniforms.uMouse.value.set(damped.x, damped.y);
         const dpr = renderer.getPixelRatio();
         const goal = wantOpen ? target * dpr : 0;
